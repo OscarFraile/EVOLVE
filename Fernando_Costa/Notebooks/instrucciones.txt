@@ -1,0 +1,21 @@
+🔁 En el futuro
+
+INSTRUCCIONES MANUALES
+
+Cada vez que Fernando actualice sus notebooks, tú solo haces:
+
+cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python"
+git pull upstream main
+git push origin main
+cp -r pre "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/"
+cp -r post "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/"
+cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE"
+git add .
+git commit -m "Actualizar notebooks pre/post de Fernando"
+git push origin main
+
+INSTRUCCIONES AUTOMATICAS
+
+He generado el archivo sync_fernando.sh para actualizar los notebooks que están en mi ruta EVOLVE/Data\ Science/EVOLVE/Fernando_Costa/Notebook. 
+Este .sh descarga las actualizaciones del repositorio de Fernando y los actualiza en mi propio repositorio. 
+Para ello hay que ejecutar: $ ~/OneDrive\ -\ FM4/Escritorio/EVOLVE/Data\ Science/EVOLVE/Fernando_Costa/sync_fernando.sh 
