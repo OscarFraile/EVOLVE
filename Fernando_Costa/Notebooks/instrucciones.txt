@@ -1,21 +1,39 @@
 🔁 En el futuro
 
+INSTRUCCIONES AUTOMATICAS
+
+He generado el archivo actualizacion-diaria.sh para actualizar los notebooks que están en mi ruta EVOLVE/Data\ Science/EVOLVE/Fernando_Costa/Notebook. 
+Este .sh descarga las actualizaciones del repositorio de Fernando y los actualiza en mi propio repositorio. 
+Para ello hay que escribir en la terminal: actualizacion-diaria 
+
 INSTRUCCIONES MANUALES
 
 Cada vez que Fernando actualice sus notebooks, tú solo haces:
 
-cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python"
-git pull upstream main
-git push origin main
-cp -r pre "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/"
-cp -r post "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/"
-cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE"
-git add .
-git commit -m "Actualizar notebooks pre/post de Fernando"
-git push origin main
+# 1. Muevete al repositorio donde tienes el fork del repo de Fernando 
+cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python" 
 
-INSTRUCCIONES AUTOMATICAS
+# 2. Actualiza el repo forkeado con lo que haya en ese momento en el repo original de Fernando 
+git fetch upstream main 
 
-He generado el archivo sync_fernando.sh para actualizar los notebooks que están en mi ruta EVOLVE/Data\ Science/EVOLVE/Fernando_Costa/Notebook. 
-Este .sh descarga las actualizaciones del repositorio de Fernando y los actualiza en mi propio repositorio. 
-Para ello hay que ejecutar: $ ~/OneDrive\ -\ FM4/Escritorio/EVOLVE/Data\ Science/EVOLVE/Fernando_Costa/sync_fernando.sh 
+# 3. Pisa toda la información del repo forkeado 
+git reset --hard upstream/main 
+
+# 4. Sube toda la información al repo dentro de mi github 
+git push origin main --force 
+
+# 5. Sustituye las carpetas pre y post dentro de EVOLVE/Fernando_Costa/Notebooks con las del repo recién actualizado 
+cp -r "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python/pre" "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/" 
+cp -r "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python/post" "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/" 
+
+# 6. Muevete al repo propio EVOLVE 
+cd ~/OneDrive\ -\ FM4/Escritorio/EVOLVE/Data\ Science/EVOLVE 
+
+# 7. Añade todos los archivos 
+git add . 
+
+# 8. Confirma los cambios 
+git commit -m "Actualización diaria de notebooks y ejercicios personales" 
+
+# 9. Ejecuta los cambios en la rama main 
+git push origin main
