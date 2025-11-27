@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:78ef92b5732033a79a7916c76daf01a3e585d1a867d7006ffbd3f77482beae4e
-size 145
+firstName,lastName,email,phoneNumber
+John,Doe,john@doe.com,0123456789
+Jane,Doe,jane@doe.com,9876543210
+James,Bond,james.bond@mi6.co.uk,0612345678
