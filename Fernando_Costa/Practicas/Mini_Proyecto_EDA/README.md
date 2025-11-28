@@ -2,6 +2,17 @@ README
 
 Fuente de datos: https://catalog.data.gov/dataset/crime-data-from-2020-to-present
 
+ESTRUCTURA Y CONTENIDO DE CADA CARPETA
+Mini_Proyecto_EDA
+- 01_notebooks: Carpeta con los notebooks de cada fase
+    - 000_Enunciado: Notebook con el enunciado del ejercicio
+    - 001_Calidad_de_datos: Análisis, formateo y generación de variables
+    - 002_EDA: Análisis de posibles aplicaciones de cambios, tratamiento de problemas y aplicación de modificaciones y estadísticos
+    - 003_Visualizaciones: Generación de tablas de frecuencia y estadísticos descriptivos con visualizaciones genéricas para la búsqueda de patrones subyacentes y posteriores generaciónes de tablas y visualizaciones específicas con objetivo de realizar un análisis profundo de la información
+- 02_archivos: Carpeta con los arhivos resultantes de la realización de cada una de las fases de análisis del proyecto
+- 99_data: Carpta con el dataset original de datos comprimido para su mejor manejo
+
+ANÁLISIS
 El análisis realizado sobre el dataset de delitos hemos comprobado que tenía posibilidades para sacar conclusiones después de trabajar los datos, por lo que hemos comprobado las dimensiones, que había nulos, diferentes tipos de datos, nombres de columnas a modificar y seguidamente hemos seguido el patrón de:
 
 - Análisis de cada variable según el significado de las variables facilitado por la web de LAPD
