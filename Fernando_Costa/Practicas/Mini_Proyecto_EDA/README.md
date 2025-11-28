@@ -1,5 +1,7 @@
 README 
 
+Fuente de datos: https://catalog.data.gov/dataset/crime-data-from-2020-to-present
+
 El análisis realizado sobre el dataset de delitos hemos comprobado que tenía posibilidades para sacar conclusiones después de trabajar los datos, por lo que hemos comprobado las dimensiones, que había nulos, diferentes tipos de datos, nombres de columnas a modificar y seguidamente hemos seguido el patrón de:
 
 - Análisis de cada variable según el significado de las variables facilitado por la web de LAPD
@@ -83,8 +85,8 @@ VISUALIZACIONES
 'crm_cd_desc' no se ve en el gráfico de ese tamaño pero lo he querido incluir para tomar medida de la forma correcta de hacerlo
 
 - Específicas: 
-
-Al final de cada notebook se genera un archivo .pickle con el resultado de las modificaciones de ese notebook de cara a poder rescatar el análisis en el punto que se necesite sin necesidad de cargar todo el código. Es decir, al final del notebook de calidad de datos se genera 'trabajo_resultado_calidad.pickle' que será el que se cargue como archivo inicial en el siguiente notebook
+    - Delito más frecuente por área
+    - Recuento delitos por año
 
 CONCLUSIONES GENÉRICAS
 - Categóricas:
@@ -98,3 +100,8 @@ CONCLUSIONES GENÉRICAS
     - Observamos una doble barriga en los datos que nos dice que hay una cantidad muy elevada de bebes que sufren agresiones y otro grupo de personas que va desde los 20 años hasta los 60 años que son el grupo que denuncia delitos, teniendo el pico máximo de concentración de delitos en los 30 años
 
 CONCLUSIONES ESPECÍFICAS
+- Delito más frecuente por área: En el gráfico podemos observar que el delito mas frecuente que se comete y la zona. Esto ayudaría a destinar recursos específicos
+    NOTA: En un análisis mas profundo, se podría segmentar por horas, edad, procedencia de la víctima por zona y horario por ejemplo
+- Recuento delitos por año: En el gráfico podemos observar el recuento de los tipos de delitos cometidos por año donde vemos que graves y leves siguen el mismo patrón descendente
+
+Al final de cada notebook se genera un archivo .pickle con el resultado de las modificaciones de ese notebook de cara a poder rescatar el análisis en el punto que se necesite sin necesidad de cargar todo el código. Es decir, al final del notebook de calidad de datos se genera 'trabajo_resultado_calidad.pickle' que será el que se cargue como archivo inicial en el siguiente notebook
