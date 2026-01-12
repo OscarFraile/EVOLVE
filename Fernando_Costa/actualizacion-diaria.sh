@@ -1,47 +1,46 @@
 #!/bin/bash
 
-# ===============================
-# Actualización diaria GLOBAL
-# ===============================
-
-BASE_DIR="/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science"
+# 1. Ajuste de la ruta base (Basado en tu captura)
+# Asegúrate de que esta ruta sea la carpeta que contiene "EVOLVE" y "evolve-data-python"
+BASE_DIR="/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE"
 DATE=$(date +%Y-%m-%d)
 
-echo "🚀 Iniciando actualización diaria global"
-echo "📂 Directorio base: $BASE_DIR"
+echo "🚀 Iniciando actualización: $DATE"
 echo "----------------------------------------"
 
-for dir in "$BASE_DIR"/*; do
-  if [ -d "$dir/.git" ]; then
-    echo ""
-    echo "📦 Repositorio detectado: $(basename "$dir")"
-    cd "$dir" || continue
+# 2. Función para procesar cada repo
+actualizar_repo() {
+    local repo_path=$1
+    if [ -d "$repo_path/.git" ]; then
+        echo "📦 Procesando: $(basename "$repo_path")"
+        cd "$repo_path" || return
 
-    # ¿Hay cambios?
-    if [ -z "$(git status --porcelain)" ]; then
-      echo "✅ Sin cambios. Se omite."
-      continue
+        # Añadir cambios (excluyendo lo que esté en .gitignore)
+        git add .
+
+        # Verificar si hay algo que enviar
+        if git diff-index --quiet HEAD --; then
+            echo "✅ Sin cambios pendientes."
+        else
+            git commit -m "Actualización diaria de notebooks y ejercicios personales $DATE"
+            
+            # Intentar subir a la rama 'main' o 'master'
+            if git push origin main; then
+                echo "🚀 Subido a main."
+            elif git push origin master; then
+                echo "🚀 Subido a master."
+            else
+                echo "❌ Error al subir cambios."
+            fi
+        fi
+        echo "----------------------------------------"
     fi
+}
 
-    # Limpieza preventiva de datos
-    git rm -r --cached --ignore-unmatch */99_Data/* >/dev/null 2>&1
-
-    # Commit
-    git add .
-    git commit -m "Actualización diaria automática $DATE" >/dev/null 2>&1 \
-      && echo "✏️ Commit creado" \
-      || { echo "⚠️ No se pudo hacer commit"; continue; }
-
-    # Push si existe origin
-    if git remote | grep -q origin; then
-      git push origin main >/dev/null 2>&1 \
-        && echo "🚀 Push realizado" \
-        || echo "❌ Error en push (revisa manualmente)"
-    else
-      echo "⚠️ No hay remoto 'origin'. Commit local creado."
-    fi
-  fi
+# 3. Ejecución: Buscamos repositorios en el nivel actual y un nivel más abajo
+# Esto cubrirá tanto 'EVOLVE' como 'evolve-data-python'
+find "$BASE_DIR" -maxdepth 2 -name ".git" | while read -r line; do
+    actualizar_repo "$(dirname "$line")"
 done
 
-echo ""
-echo "🏁 Actualización diaria global finalizada"
+echo "🏁 Proceso finalizado"
