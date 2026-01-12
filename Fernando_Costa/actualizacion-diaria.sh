@@ -1,41 +1,47 @@
 #!/bin/bash
 
 # ===============================
-# Script de actualización diaria
+# Actualización diaria GLOBAL
 # ===============================
 
-# 1️⃣ Muevete al repositorio donde tienes el fork del repo de Fernando
-cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python" || exit
+BASE_DIR="/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science"
+DATE=$(date +%Y-%m-%d)
 
-echo "🔄 Actualizando fork desde upstream..."
+echo "🚀 Iniciando actualización diaria global"
+echo "📂 Directorio base: $BASE_DIR"
+echo "----------------------------------------"
 
-# 2️⃣ Trae los últimos cambios del repo original de Fernando
-git fetch upstream main
+for dir in "$BASE_DIR"/*; do
+  if [ -d "$dir/.git" ]; then
+    echo ""
+    echo "📦 Repositorio detectado: $(basename "$dir")"
+    cd "$dir" || continue
 
-# 3️⃣ Pisa toda la información del repo forkeado
-git reset --hard upstream/main
+    # ¿Hay cambios?
+    if [ -z "$(git status --porcelain)" ]; then
+      echo "✅ Sin cambios. Se omite."
+      continue
+    fi
 
-# 4️⃣ Sube toda la información al repo dentro de tu GitHub
-git push origin main --force
+    # Limpieza preventiva de datos
+    git rm -r --cached --ignore-unmatch */99_Data/* >/dev/null 2>&1
 
-echo "📂 Copiando carpetas pre y post al repo EVOLVE..."
+    # Commit
+    git add .
+    git commit -m "Actualización diaria automática $DATE" >/dev/null 2>&1 \
+      && echo "✏️ Commit creado" \
+      || { echo "⚠️ No se pudo hacer commit"; continue; }
 
-# 5️⃣ Sustituye las carpetas pre y post dentro de EVOLVE
-cp -ru "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python/pre" "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/"
-cp -ru "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/evolve-data-python/post" "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE/Fernando_Costa/Notebooks/"
+    # Push si existe origin
+    if git remote | grep -q origin; then
+      git push origin main >/dev/null 2>&1 \
+        && echo "🚀 Push realizado" \
+        || echo "❌ Error en push (revisa manualmente)"
+    else
+      echo "⚠️ No hay remoto 'origin'. Commit local creado."
+    fi
+  fi
+done
 
-echo "✏️ Preparando commit en el repo EVOLVE..."
-
-# 6️⃣ Muevete al repo propio EVOLVE
-cd "/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE" || exit
-
-# 7️⃣ Añade todos los archivos
-git add .
-
-# 8️⃣ Confirma los cambios con fecha automática
-git commit -m "Actualización diaria de notebooks y ejercicios personales $(date +%Y-%m-%d)"
-
-# 9️⃣ Ejecuta los cambios en la rama main
-git push origin main
-
-echo "✅ Sincronización completa. Todos los notebooks actualizados."
+echo ""
+echo "🏁 Actualización diaria global finalizada"
