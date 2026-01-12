@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ajusta la ruta para que sea el contenedor de AMBOS repositorios
+# Asegúrate de que esta ruta sea la que contiene las carpetas con .git
 BASE_DIR="/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science"
 DATE=$(date +%Y-%m-%d)
 
@@ -12,28 +12,31 @@ actualizar_repo() {
     echo "📦 Procesando: $(basename "$repo_path")"
     cd "$repo_path" || return
 
-    # Configuración de seguridad para evitar errores de fin de línea (LF/CRLF)
-    git config core.autocrlf true
+    # 1. Traer cambios de GitHub primero para evitar bloqueos
+    git pull origin main --rebase >/dev/null 2>&1
 
+    # 2. Añadir cambios locales
     git add .
 
+    # 3. Verificar cambios
     if git diff-index --quiet HEAD --; then
-        echo "✅ Sin cambios pendientes."
+        echo "✅ Sin cambios nuevos para subir."
     else
         git commit -m "Actualización diaria $DATE"
         
-        # Intentamos subir a la rama main (que es la que usas en GitHub)
+        # 4. Intentar subir
         if git push origin main; then
-            echo "🚀 Subido con éxito a GitHub."
+            echo "🚀 ¡Todo subido a GitHub!"
         else
-            echo "❌ Error: ¿Has hecho el 'git remote add origin'?"
+            echo "❌ Error al subir. Revisa si hay conflictos manuales."
         fi
     fi
     echo "----------------------------------------"
 }
 
-# Busca carpetas que contengan un .git (repositorios reales)
-find "$BASE_DIR" -maxdepth 2 -name ".git" | while read -r line; do
+# Busca solo en las subcarpetas de Data Science (ej: EVOLVE, evolve-data-python)
+# No busca en la raíz para evitar el error de repositorios anidados
+find "$BASE_DIR" -maxdepth 2 -mindepth 2 -name ".git" | while read -r line; do
     actualizar_repo "$(dirname "$line")"
 done
 
