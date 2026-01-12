@@ -1,44 +1,38 @@
 #!/bin/bash
 
-# 1. Ajuste de la ruta base (Basado en tu captura)
-# Asegúrate de que esta ruta sea la carpeta que contiene "EVOLVE" y "evolve-data-python"
-BASE_DIR="/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science/EVOLVE"
+# Ajusta la ruta para que sea el contenedor de AMBOS repositorios
+BASE_DIR="/c/Users/Oscar/OneDrive - FM4/Escritorio/EVOLVE/Data Science"
 DATE=$(date +%Y-%m-%d)
 
 echo "🚀 Iniciando actualización: $DATE"
 echo "----------------------------------------"
 
-# 2. Función para procesar cada repo
 actualizar_repo() {
     local repo_path=$1
-    if [ -d "$repo_path/.git" ]; then
-        echo "📦 Procesando: $(basename "$repo_path")"
-        cd "$repo_path" || return
+    echo "📦 Procesando: $(basename "$repo_path")"
+    cd "$repo_path" || return
 
-        # Añadir cambios (excluyendo lo que esté en .gitignore)
-        git add .
+    # Configuración de seguridad para evitar errores de fin de línea (LF/CRLF)
+    git config core.autocrlf true
 
-        # Verificar si hay algo que enviar
-        if git diff-index --quiet HEAD --; then
-            echo "✅ Sin cambios pendientes."
+    git add .
+
+    if git diff-index --quiet HEAD --; then
+        echo "✅ Sin cambios pendientes."
+    else
+        git commit -m "Actualización diaria $DATE"
+        
+        # Intentamos subir a la rama main (que es la que usas en GitHub)
+        if git push origin main; then
+            echo "🚀 Subido con éxito a GitHub."
         else
-            git commit -m "Actualización diaria de notebooks y ejercicios personales $DATE"
-            
-            # Intentar subir a la rama 'main' o 'master'
-            if git push origin main; then
-                echo "🚀 Subido a main."
-            elif git push origin master; then
-                echo "🚀 Subido a master."
-            else
-                echo "❌ Error al subir cambios."
-            fi
+            echo "❌ Error: ¿Has hecho el 'git remote add origin'?"
         fi
-        echo "----------------------------------------"
     fi
+    echo "----------------------------------------"
 }
 
-# 3. Ejecución: Buscamos repositorios en el nivel actual y un nivel más abajo
-# Esto cubrirá tanto 'EVOLVE' como 'evolve-data-python'
+# Busca carpetas que contengan un .git (repositorios reales)
 find "$BASE_DIR" -maxdepth 2 -name ".git" | while read -r line; do
     actualizar_repo "$(dirname "$line")"
 done
