@@ -1,0 +1,140 @@
+﻿ID,Tarea,Tipo,Fecha Inicio,Fecha Fin,Completado (%)
+B1,B1 · Definición y planificación del proyecto,Bloque,01/11/2025,20/11/2025,100
+T101,Definición del objetivo de negocio,Tarea,01/11/2025,04/11/2025,100
+T102,Identificación de palancas de rentabilidad,Tarea,05/11/2025,07/11/2025,100
+T103,Definición de KPIs por palanca,Tarea,08/11/2025,10/11/2025,100
+T104,Identificación de entidades y fuentes de datos,Tarea,11/11/2025,14/11/2025,100
+T105,Formulación de preguntas semilla por eje de análisis,Tarea,15/11/2025,20/11/2025,100
+M901,Hito: Primeras ideas de proyecto fin de máster,Hito,21/11/2025,21/11/2025,100
+B2,B2 · Configuración del entorno y setup del proyecto,Bloque,21/11/2025,11/12/2025,100
+T201,Creación del entorno Conda con versiones específicas,Tarea,21/11/2025,29/11/2025,100
+T202,Importación y verificación de librerías,Tarea,30/11/2025,04/12/2025,100
+T203,Creación de estructura de directorios,Tarea,05/12/2025,11/12/2025,100
+M902,Hito: Definición del MVP,Hito,12/12/2025,12/12/2025,100
+B3,B3 · Adquisición y exploración inicial de datos,Bloque,12/12/2025,26/12/2025,100
+T301,Carga y exploración de ficheros AirBnB disponibles,Tarea,12/12/2025,16/12/2025,100
+T302,Decisión sobre qué tablas usar y descartar,Tarea,17/12/2025,19/12/2025,100
+T303,Obtención datos precio m2 (web scraping Idealista),Tarea,20/12/2025,23/12/2025,100
+T304,Creación base de datos SQLite y carga de tablas,Tarea,24/12/2025,26/12/2025,100
+B4,B4 · Creación del datamart analítico,Bloque,27/12/2025,19/01/2026,100
+T401,Eliminación de variables irrelevantes o redundantes,Tarea,27/12/2025,28/12/2025,100
+T402,Normalización de nombres de columnas,Tarea,29/12/2025,29/12/2025,100
+T403,Imputación nulos price (media por barrio y aforo),Tarea,30/12/2025,31/12/2025,100
+T404,Imputación nulos beds (regla por accommodates),Tarea,01/01/2026,02/01/2026,100
+T405,Imputación nulos bedrooms (regla por beds),Tarea,03/01/2026,04/01/2026,100
+T406,Tratamiento bathrooms y bathrooms_text,Tarea,05/01/2026,06/01/2026,100
+T407,Imputación variables de reviews (scores y fechas),Tarea,07/01/2026,08/01/2026,100
+T408,Tratamiento host_response_time y acceptance_rate,Tarea,09/01/2026,10/01/2026,100
+T409,Binarización de license y has_availability,Tarea,11/01/2026,11/01/2026,100
+T410,Imputación host_is_superhost por condiciones negocio,Tarea,12/01/2026,13/01/2026,100
+T411,Eliminación registros con demasiados nulos (thresh),Tarea,14/01/2026,14/01/2026,100
+T412,Análisis y eliminación de duplicados,Tarea,15/01/2026,15/01/2026,100
+T413,Conversión de variables de fecha a formato uniforme,Tarea,16/01/2026,16/01/2026,100
+T414,"Detección y tratamiento atípicos (price, min/max)",Tarea,17/01/2026,18/01/2026,100
+T415,Eliminación de hoteles y hostels del dataset,Tarea,19/01/2026,19/01/2026,100
+T416,Limpieza precio m2 (unidades y separadores de miles),Tarea,17/01/2026,18/01/2026,100
+T417,"Join listings, listings_det y precio_m2 por distrito",Tarea,20/01/2026,21/01/2026,100
+T418,Resolución de inconsistencias en nombres de distritos,Tarea,18/01/2026,19/01/2026,100
+T419,Guardado del datamart en base de datos,Tarea,20/01/2026,20/01/2026,100
+M903,Hito: Diseño del flujo de la solución y MVP,Hito,13/01/2026,13/01/2026,100
+B5,B5 · Preparación de variables para análisis,Bloque,21/01/2026,02/02/2026,100
+T501,Creación KPI precio_total (lógica por tipo alquiler),Tarea,21/01/2026,23/01/2026,100
+T502,Creación KPI ocupación desde availability_365,Tarea,21/01/2026,22/01/2026,100
+T503,"Discretización manual bedrooms (Estudio,1,2,3,4+)",Tarea,24/01/2026,25/01/2026,100
+T504,Discretización automática percentiles,Tarea,24/01/2026,25/01/2026,100
+T505,Estimación de m2 por número de dormitorios,Tarea,26/01/2026,27/01/2026,100
+T506,Cálculo precio_compra estimado (m2 x precio_m2 x dto),Tarea,28/01/2026,29/01/2026,100
+T507,Distancia geoespacial a Puerta del Sol (Haversine),Tarea,28/01/2026,29/01/2026,100
+T508,Creación variable target pisos_rentables (umbral 10a),Tarea,30/01/2026,01/02/2026,100
+T509,Guardado del dataset preparado en base de datos,Tarea,02/02/2026,02/02/2026,100
+B6,B6 · Análisis e Insights,Bloque,03/02/2026,19/02/2026,100
+T601,Estadísticos descriptivos y rango de precios,Tarea,03/02/2026,04/02/2026,100
+T602,Ranking de distritos y barrios por precio mediano,Tarea,05/02/2026,06/02/2026,100
+T603,Análisis caso atípico San Blas (eventos deportivos),Tarea,07/02/2026,08/02/2026,100
+T604,Scatter precio_compra vs precio_total por zona,Tarea,09/02/2026,10/02/2026,100
+T605,"Minicubo precio: bedrooms, beds, accommodates",Tarea,09/02/2026,11/02/2026,100
+T606,Análisis relación número de camas vs precio,Tarea,12/02/2026,13/02/2026,100
+T607,Análisis distancia puntos de interés vs precio,Tarea,12/02/2026,13/02/2026,100
+T608,Análisis ocupación: estadísticos y ranking distritos,Tarea,14/02/2026,15/02/2026,100
+T609,"Minicubo ocupación: bedrooms, beds, accommodates",Tarea,14/02/2026,15/02/2026,100
+T610,Visualización geográfica en mapa interactivo (Folium),Tarea,16/02/2026,17/02/2026,100
+T611,Síntesis de 8 insights de negocio accionables,Tarea,18/02/2026,19/02/2026,100
+B7,B7 · Comunicación de resultados,Bloque,20/02/2026,28/02/2026,100
+T701,Redacción del contexto y objetivos del análisis,Tarea,20/02/2026,21/02/2026,100
+T702,Elaboración de conclusiones ejecutivas,Tarea,22/02/2026,23/02/2026,100
+T703,Construcción de 5 exhibits gráficos de soporte,Tarea,24/02/2026,26/02/2026,100
+T704,Recomendaciones para equipo de valoraciones,Tarea,27/02/2026,28/02/2026,100
+B8,"B8 · Exploración, calidad de datos y EDA para ML",Bloque,01/03/2026,15/03/2026,100
+T801,Carga dataset y eliminación de columnas de la target,Tarea,01/03/2026,01/03/2026,100
+T802,[BLOQ] Separación dataset validación 30%,Bloqueante,02/03/2026,02/03/2026,100
+T803,[BLOQ] Separación dataset de trabajo 70%,Bloqueante,02/03/2026,02/03/2026,100
+T804,"Exploración inicial: dimensiones, tipos y únicos",Tarea,03/03/2026,04/03/2026,100
+T805,Separación en datasets numérico y categórico,Tarea,05/03/2026,05/03/2026,100
+T806,Identificación y gestión de nulos en categóricas,Tarea,06/03/2026,07/03/2026,100
+T807,Agrupación de categorías poco frecuentes en OTROS,Tarea,08/03/2026,09/03/2026,100
+T808,Normalización de valores inconsistentes,Tarea,10/03/2026,10/03/2026,100
+T809,Análisis estadístico de variables numéricas,Tarea,11/03/2026,12/03/2026,100
+T810,EDA categóricas: frecuencias y gráficos de barras,Tarea,11/03/2026,12/03/2026,100
+T811,EDA numéricas: estadísticos ampliados y distribución,Tarea,13/03/2026,14/03/2026,100
+T812,Guardado de datasets tras calidad de datos y EDA,Tarea,15/03/2026,15/03/2026,100
+B9,B9 · Transformación de datos,Bloque,16/03/2026,31/03/2026,0
+T9001,Separación de la variable target,Tarea,16/03/2026,16/03/2026,0
+T9002,One Hot Encoding (variables nominales sin orden),Tarea,17/03/2026,18/03/2026,0
+T9003,Ordinal Encoding (variables con orden natural),Tarea,17/03/2026,18/03/2026,0
+T9004,Target Encoding (variables con alta cardinalidad),Tarea,19/03/2026,20/03/2026,0
+T9005,"Tratamiento variables de fecha (antigüedad, diffs)",Tarea,19/03/2026,20/03/2026,0
+T9006,"Tratamiento texto amenities (tokenización, binarias)",Tarea,21/03/2026,23/03/2026,0
+T9007,Transformación numéricas: discretización y normaliz.,Tarea,21/03/2026,23/03/2026,0
+T9008,Reescalado (MinMax / Standard / Robust según algos),Tarea,24/03/2026,26/03/2026,0
+T9009,Unificación en tablón analítico y eliminación nulos,Tarea,27/03/2026,29/03/2026,0
+T9010,Guardado del tablón analítico,Tarea,30/03/2026,31/03/2026,0
+M904,Hito: Plan de desarrollo de producto,Hito,24/03/2026,24/03/2026,0
+B10,B10 · Preselección de variables,Bloque,01/04/2026,11/04/2026,0
+T1001,[BLOQ] Separación de predictoras y target,Bloqueante,01/04/2026,01/04/2026,0
+T1002,Mutual Information,Tarea,02/04/2026,03/04/2026,0
+T1003,Recursive Feature Elimination (RFE),Tarea,02/04/2026,03/04/2026,0
+T1004,Permutation Importance,Tarea,02/04/2026,03/04/2026,0
+T1005,Combinación de métodos mediante Super Ranking,Tarea,04/04/2026,05/04/2026,0
+T1006,Análisis de correlaciones entre variables,Tarea,06/04/2026,07/04/2026,0
+T1007,Eliminación de variables con exceso de correlación,Tarea,08/04/2026,09/04/2026,0
+T1008,Selección método final y guardado dataset preselec.,Tarea,10/04/2026,11/04/2026,0
+B11,B11 · Balanceo,Bloque,12/04/2026,19/04/2026,0
+T1101,Análisis de la distribución de clases de la target,Tarea,12/04/2026,12/04/2026,0
+T1102,Evaluación sin balanceo como línea base,Tarea,13/04/2026,13/04/2026,0
+T1103,Undersampling aleatorio (RandomUnderSampler),Tarea,14/04/2026,15/04/2026,0
+T1104,Oversampling aleatorio (RandomOverSampler),Tarea,14/04/2026,15/04/2026,0
+T1105,SMOTE-Tomek (técnica combinada),Tarea,14/04/2026,15/04/2026,0
+T1106,Penalización por peso en el modelo (class_weight),Tarea,14/04/2026,15/04/2026,0
+T1107,Comparación de resultados y selección método final,Tarea,16/04/2026,17/04/2026,0
+T1108,Guardado del dataset final balanceado,Tarea,18/04/2026,19/04/2026,0
+B12,B12 · Modelización,Bloque,20/04/2026,04/05/2026,0
+T1201,[BLOQ] Separación train y validación interna,Bloqueante,20/04/2026,20/04/2026,0
+T1202,Regresión Logística (línea base),Tarea,21/04/2026,22/04/2026,0
+T1203,Random Forest,Tarea,21/04/2026,22/04/2026,0
+T1204,XGBoost y Gradient Boosting,Tarea,21/04/2026,22/04/2026,0
+T1205,Hist Gradient Boosting,Tarea,21/04/2026,22/04/2026,0
+T1206,Optimización hiperparámetros (Grid/Random Search+CV),Tarea,23/04/2026,26/04/2026,0
+T1207,"Evaluación: ROC AUC, Precision, Recall, F1, Matriz",Tarea,27/04/2026,28/04/2026,0
+T1208,"Reporting: Gain Chart, Lift Chart, Curva ROC",Tarea,29/04/2026,30/04/2026,0
+T1209,Selección del modelo final,Tarea,01/05/2026,04/05/2026,0
+B13,B13 · Preparación del código de producción,Bloque,05/05/2026,19/05/2026,0
+T1301,Encapsulación de transformaciones en FunctionTransf.,Tarea,05/05/2026,07/05/2026,0
+T1302,Creación y serialización de pipelines por etapa,Tarea,08/05/2026,10/05/2026,0
+T1303,Definición de la lista de variables finales del modelo,Tarea,08/05/2026,09/05/2026,0
+T1304,Instanciación del modelo final con hiperparms óptimos,Tarea,10/05/2026,11/05/2026,0
+T1305,Construcción del ColumnTransformer completo,Tarea,12/05/2026,13/05/2026,0
+T1306,Creación del pipeline completo preprocesamiento+modelo,Tarea,14/05/2026,15/05/2026,0
+T1307,Entrenamiento pipeline sobre dataset completo,Tarea,16/05/2026,17/05/2026,0
+T1308,Serialización del pipeline con cloudpickle,Tarea,18/05/2026,19/05/2026,0
+B14,B14 · Código de reentrenamiento,Bloque,20/05/2026,26/05/2026,0
+T1401,Definición de la estrategia de reentrenamiento,Tarea,20/05/2026,21/05/2026,0
+T1402,Código modular para reentrenar ante nuevos datos,Tarea,22/05/2026,24/05/2026,0
+T1403,Validación de que el reentrenamiento reproduce result.,Tarea,25/05/2026,26/05/2026,0
+B15,B15 · Aplicación en producción y validación temporal,Bloque,27/05/2026,31/05/2026,0
+T1501,Carga de datos de nuevo periodo temporal,Tarea,27/05/2026,27/05/2026,0
+T1502,Aplicación de pipelines serializados sobre nuevos datos,Tarea,28/05/2026,28/05/2026,0
+T1503,Obtención del scoring mediante predicción del modelo,Tarea,29/05/2026,29/05/2026,0
+T1504,Cálculo de métricas de negocio sobre las predicciones,Tarea,30/05/2026,30/05/2026,0
+T1505,Análisis comparativo de resultados entre periodos,Tarea,30/05/2026,30/05/2026,0
+T1506,Identificación de los casos más rentables por scoring,Tarea,31/05/2026,31/05/2026,0
+M905,Hito: Entrega final del proyecto,Hito,01/06/2026,01/06/2026,0

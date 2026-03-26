@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Proyecto DS - AirBnB Madrid" company="Master Data Science" webLink="" view-date="2025-12-01" view-index="0" gantt-divider-location="461" resource-divider-location="300" version="3.3.3322" locale="es_ES">
+    <description><![CDATA[Proyecto fin de master - Analisis y prediccion de rentabilidad de inmuebles turisticos en Madrid]]></description>
+    <view zooming-state="default:6" id="gantt-chart">
+        <field id="tpd3" name="Nombre" width="232" order="0"/>
+        <field id="tpd4" name="Fecha de inicio" width="77" order="1"/>
+        <field id="tpd5" name="Fecha de fin" width="77" order="2"/>
+        <field id="tpd8" name="Coordinador" width="59" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nombre" width="210" order="0"/>
+        <field id="1" name="Función" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="901" uid="d3e31e0e807040bb8eb1e5315759028e" name="Hito: Primeras ideas de proyecto fin de master" color="#993c1d" meeting="true" start="2025-11-21" duration="0" complete="100" expand="true"/>
+        <task id="1" uid="cdd3c683f38e4633a3288ef7160c7864" name="B1 · Definicion y planificacion del proyecto" color="#185fa5" meeting="false" start="2025-11-01" duration="20" complete="100" expand="true">
+            <task id="101" uid="e51aa59efc7b4f85a3c31d9e7225de77" name="Definicion del objetivo de negocio" color="#378add" meeting="false" start="2025-11-01" duration="4" complete="100" expand="true"/>
+            <task id="102" uid="e569e00fe11a42e9bbe548e7e7f8e31f" name="Identificacion de palancas de rentabilidad" color="#378add" meeting="false" start="2025-11-05" duration="3" complete="100" expand="true"/>
+            <task id="103" uid="ec440258807840fba218ea8a027395f9" name="Definicion de KPIs por palanca" color="#378add" meeting="false" start="2025-11-08" duration="3" complete="100" expand="true"/>
+            <task id="104" uid="669560efede844f788c2d79c8b80d2c2" name="Identificacion de entidades y fuentes de datos" color="#378add" meeting="false" start="2025-11-11" duration="4" complete="100" expand="true"/>
+            <task id="105" uid="541199d703f347b7ab05b94d0caa3880" name="Formulacion de preguntas semilla por eje de analisis" color="#378add" meeting="false" start="2025-11-15" duration="6" complete="100" expand="true"/>
+        </task>
+        <task id="2" uid="c20dd22d099d4d008aff0a643f8d95be" name="B2 · Configuracion del entorno y setup del proyecto" color="#185fa5" meeting="false" start="2025-11-21" duration="21" complete="100" expand="true">
+            <task id="201" uid="55823ba0250c4135bca03a6b52310806" name="Creacion del entorno Conda con versiones especificas" color="#378add" meeting="false" start="2025-11-21" duration="9" complete="100" expand="true"/>
+            <task id="202" uid="087a9734f7814a7ba145e46d77cd10f0" name="Importacion y verificacion de librerias" color="#378add" meeting="false" start="2025-11-30" duration="5" complete="100" expand="true"/>
+            <task id="203" uid="76ad78c02a6b49b19b67307e12f4a7d6" name="Creacion automatizada de estructura de directorios" color="#378add" meeting="false" start="2025-12-05" duration="7" complete="100" expand="true"/>
+        </task>
+        <task id="902" uid="a66ee6b455e6494e82d855cdb55b368b" name="Hito: Definicion del MVP" color="#993c1d" meeting="true" start="2025-12-12" duration="0" complete="100" expand="true"/>
+        <task id="3" uid="e080be5bc3ba4f4781ae5dd08f1c31d7" name="B3 · Adquisicion y exploracion inicial de datos" color="#185fa5" meeting="false" start="2025-12-12" duration="15" complete="100" expand="true">
+            <task id="301" uid="4602d0aad703464db5ef0c28bc753ab4" name="Carga y exploracion de ficheros AirBnB disponibles" color="#378add" meeting="false" start="2025-12-12" duration="5" complete="100" expand="true"/>
+            <task id="302" uid="4b3d3714b8c5462c905fb25b8f2006a3" name="Decision sobre que tablas usar y descartar" color="#378add" meeting="false" start="2025-12-17" duration="3" complete="100" expand="true"/>
+            <task id="303" uid="270f0db8a718487bb0578245231e2917" name="Obtencion datos externos precio m2 (web scraping Idealista)" color="#378add" meeting="false" start="2025-12-20" duration="4" complete="100" expand="true"/>
+            <task id="304" uid="494edd726fa24b299848515681dcf22b" name="Creacion base de datos SQLite y carga de tablas" color="#378add" meeting="false" start="2025-12-24" duration="3" complete="100" expand="true"/>
+        </task>
+        <task id="4" uid="2405103d7c3944eb8c97cbec44ff4b65" name="B4 · Creacion del datamart analitico" color="#185fa5" meeting="false" start="2025-12-27" duration="26" complete="100" expand="true">
+            <task id="401" uid="ca3cbe5b836648d09768e0c2f2bafbec" name="Eliminacion de variables irrelevantes o redundantes" color="#378add" meeting="false" start="2025-12-27" duration="2" complete="100" expand="true"/>
+            <task id="402" uid="1b1f74211988413fad0e1da1be990a8b" name="Normalizacion de nombres de columnas" color="#378add" meeting="false" start="2025-12-29" duration="1" complete="100" expand="true"/>
+            <task id="403" uid="44f147f316c748689c3d6d6b6ab7e510" name="Imputacion nulos price (media por barrio y aforo)" color="#378add" meeting="false" start="2025-12-30" duration="2" complete="100" expand="true"/>
+            <task id="404" uid="4faf4c09707c4dd18cb421fe96383b4d" name="Imputacion nulos beds (regla por accommodates)" color="#378add" meeting="false" start="2026-01-01" duration="2" complete="100" expand="true"/>
+            <task id="405" uid="68d9f98717184ce68e18b50b0bbbd7e9" name="Imputacion nulos bedrooms (regla por beds)" color="#378add" meeting="false" start="2026-01-03" duration="2" complete="100" expand="true"/>
+            <task id="406" uid="a688a59248c24bf4858e224e42614e28" name="Tratamiento bathrooms y bathrooms_text" color="#378add" meeting="false" start="2026-01-05" duration="2" complete="100" expand="true"/>
+            <task id="407" uid="622d3842a3d64b9083b8d2374878c7a6" name="Imputacion variables de reviews (scores y fechas)" color="#378add" meeting="false" start="2026-01-07" duration="2" complete="100" expand="true"/>
+            <task id="408" uid="61e65606c0ab4df8b00af125c585716f" name="Tratamiento host_response_time, rate y acceptance_rate" color="#378add" meeting="false" start="2026-01-09" duration="2" complete="100" expand="true"/>
+            <task id="409" uid="bd3e8536bdf74ec6842b29e5eb434412" name="Binarizacion de license y has_availability" color="#378add" meeting="false" start="2026-01-11" duration="1" complete="100" expand="true"/>
+            <task id="410" uid="0478f538210442c6876f86408f00ca3f" name="Imputacion host_is_superhost por condiciones de negocio" color="#378add" meeting="false" start="2026-01-12" duration="2" complete="100" expand="true"/>
+            <task id="411" uid="2971293f4963485cb8b05ace88056058" name="Eliminacion registros con demasiados nulos (thresh)" color="#378add" meeting="false" start="2026-01-14" duration="1" complete="100" expand="true"/>
+            <task id="412" uid="b3ffdd7816e9484e974080c32c3c5981" name="Analisis y eliminacion de duplicados" color="#378add" meeting="false" start="2026-01-15" duration="1" complete="100" expand="true"/>
+            <task id="413" uid="938e2c5df3c74f61a2b7803174e25144" name="Conversion de variables de fecha a formato uniforme" color="#378add" meeting="false" start="2026-01-16" duration="1" complete="100" expand="true"/>
+            <task id="414" uid="859862f1797c4e5d9f310965c3813e14" name="Deteccion y tratamiento atipicos (price, min/max nights)" color="#378add" meeting="false" start="2026-01-17" duration="2" complete="100" expand="true"/>
+            <task id="415" uid="9c4a9acf1f674f58a2ecfd7c6c6145bb" name="Eliminacion de hoteles y hostels del dataset" color="#378add" meeting="false" start="2026-01-19" duration="1" complete="100" expand="true"/>
+            <task id="416" uid="44aaaf71c6714f12a4a78660ca616018" name="Limpieza precio m2 (unidades y separadores de miles)" color="#378add" meeting="false" start="2026-01-17" duration="2" complete="100" expand="true"/>
+            <task id="417" uid="6430a3aebc9644a7953d61104143a91e" name="Join listings_det, listings y precio_m2 por distrito" color="#378add" meeting="false" start="2026-01-20" duration="2" complete="100" expand="true"/>
+            <task id="418" uid="151c362608a34e348e0a636bb07e43d9" name="Resolucion de inconsistencias en nombres de distritos" color="#378add" meeting="false" start="2026-01-18" duration="2" complete="100" expand="true"/>
+            <task id="419" uid="b902f9cf93684413bafaca6a99711b11" name="Guardado del datamart en base de datos" color="#378add" meeting="false" start="2026-01-20" duration="1" complete="100" expand="true"/>
+        </task>
+        <task id="903" uid="87695a9123564c35bc6a521fba9c065c" name="Hito: Diseno del flujo de la solucion y componentes MVP" color="#993c1d" meeting="true" start="2026-01-13" duration="0" complete="100" expand="true"/>
+        <task id="5" uid="c41e854095ad465f88cd177b29ca0e56" name="B5 · Preparacion de variables para analisis" color="#185fa5" meeting="false" start="2026-01-21" duration="13" complete="100" expand="true">
+            <task id="501" uid="8933b8fa949e4189995ad1f599bba8f4" name="Creacion KPI precio_total (logica por tipo de alquiler)" color="#378add" meeting="false" start="2026-01-21" duration="3" complete="100" expand="true"/>
+            <task id="502" uid="0c44b0baf09749d283afd28d9651ed7c" name="Creacion KPI ocupacion desde availability_365" color="#378add" meeting="false" start="2026-01-21" duration="2" complete="100" expand="true"/>
+            <task id="503" uid="8896167d337543ff94823b3ebea9db22" name="Discretizacion manual bedrooms (Estudio, 1, 2, 3, 4+)" color="#378add" meeting="false" start="2026-01-24" duration="2" complete="100" expand="true"/>
+            <task id="504" uid="5fcfbffacff743e3b930c5e838b0f64e" name="Discretizacion automatica percentiles (accommodates, beds, reviews)" color="#378add" meeting="false" start="2026-01-24" duration="2" complete="100" expand="true"/>
+            <task id="505" uid="2b026cf92afb4606ac2921bb8938a6c8" name="Estimacion de m2 por numero de dormitorios" color="#378add" meeting="false" start="2026-01-26" duration="2" complete="100" expand="true"/>
+            <task id="506" uid="9858b75d48d24722b4355de2ea03e9f0" name="Calculo precio_compra estimado (m2 x precio_m2 x descuento)" color="#378add" meeting="false" start="2026-01-28" duration="2" complete="100" expand="true"/>
+            <task id="507" uid="3957323c29fa4b969def36ba434acda4" name="Distancia geoespacial a Puerta del Sol (Haversine)" color="#378add" meeting="false" start="2026-01-28" duration="2" complete="100" expand="true"/>
+            <task id="508" uid="e8b7bea7c30e4643b970002c318be8ed" name="Creacion variable target pisos_rentables (umbral 10 anos)" color="#378add" meeting="false" start="2026-01-30" duration="3" complete="100" expand="true"/>
+            <task id="509" uid="e24917b1a50c49afaed103ce9f55f597" name="Guardado del dataset preparado en base de datos" color="#378add" meeting="false" start="2026-02-02" duration="1" complete="100" expand="true"/>
+        </task>
+        <task id="6" uid="785eb8546fef4b6f9613e5610ef4e2de" name="B6 · Analisis e insights" color="#185fa5" meeting="false" start="2026-02-03" duration="17" complete="100" expand="true">
+            <task id="601" uid="6caba333407944a886be028f2f1c73be" name="Estadisticos descriptivos y rango de precios" color="#378add" meeting="false" start="2026-02-03" duration="2" complete="100" expand="true"/>
+            <task id="602" uid="44b18adda74f48ca86a1023d8f18927a" name="Ranking de distritos y barrios por precio mediano" color="#378add" meeting="false" start="2026-02-05" duration="2" complete="100" expand="true"/>
+            <task id="603" uid="ff919eb5662b48d0ad7071c689cfd583" name="Analisis caso atipico San Blas (eventos deportivos)" color="#378add" meeting="false" start="2026-02-07" duration="2" complete="100" expand="true"/>
+            <task id="604" uid="2994471ede2f4d0e9a98b7db9e2fb5ae" name="Scatter precio_compra vs precio_total por distrito y barrio" color="#378add" meeting="false" start="2026-02-09" duration="2" complete="100" expand="true"/>
+            <task id="605" uid="5088234b0315441dbe0961e637c91e0f" name="Minicubo precio: bedrooms, beds, accommodates, reviews" color="#378add" meeting="false" start="2026-02-09" duration="3" complete="100" expand="true"/>
+            <task id="606" uid="3cb5bdc443f4420e924313ce4e057a48" name="Analisis relacion numero de camas vs precio" color="#378add" meeting="false" start="2026-02-12" duration="2" complete="100" expand="true"/>
+            <task id="607" uid="6e1846292743426b892d2f0c0dd9ecc9" name="Analisis distancia puntos de interes vs precio alquiler" color="#378add" meeting="false" start="2026-02-12" duration="2" complete="100" expand="true"/>
+            <task id="608" uid="c10422c8846d4dab98a24b47b26f3504" name="Analisis ocupacion: estadisticos y ranking por distrito" color="#378add" meeting="false" start="2026-02-14" duration="2" complete="100" expand="true"/>
+            <task id="609" uid="f4a7ad7c6c554491a326fb837f998661" name="Minicubo ocupacion: bedrooms, beds, accommodates" color="#378add" meeting="false" start="2026-02-14" duration="2" complete="100" expand="true"/>
+            <task id="610" uid="a107f03d54ac495590dd1e8a6f6de008" name="Visualizacion geografica sobre mapa interactivo (Folium)" color="#378add" meeting="false" start="2026-02-16" duration="2" complete="100" expand="true"/>
+            <task id="611" uid="564580a07d254038a3906cdad2e36d8f" name="Sintesis de 8 insights de negocio accionables" color="#378add" meeting="false" start="2026-02-18" duration="2" complete="100" expand="true"/>
+        </task>
+        <task id="7" uid="e8605be60a0b46cbbf99e0eb7f208154" name="B7 · Comunicacion de resultados" color="#185fa5" meeting="false" start="2026-02-20" duration="9" complete="100" expand="true">
+            <task id="701" uid="d433b97b49844f85b9dd0495622d5e52" name="Redaccion del contexto y objetivos del analisis" color="#378add" meeting="false" start="2026-02-20" duration="2" complete="100" expand="true"/>
+            <task id="702" uid="c1c2e009b52f4966ad978e96f85e9079" name="Elaboracion de conclusiones ejecutivas" color="#378add" meeting="false" start="2026-02-22" duration="2" complete="100" expand="true"/>
+            <task id="703" uid="f5555144c164421fb3610a7c9323c9f7" name="Construccion de 5 exhibits graficos de soporte" color="#378add" meeting="false" start="2026-02-24" duration="3" complete="100" expand="true"/>
+            <task id="704" uid="9e8bf8cfaf5c4c2c8d6ce7edb4210d41" name="Formulacion de recomendaciones para equipo de valoraciones" color="#378add" meeting="false" start="2026-02-27" duration="2" complete="100" expand="true"/>
+        </task>
+        <task id="8" uid="19d41b9dee5744c79df66b12a671c6ec" name="B8 · Exploracion, calidad de datos y EDA para ML" color="#185fa5" meeting="false" start="2026-03-01" duration="15" complete="100" expand="true">
+            <task id="801" uid="5ca24dd70e1b4981936777e9875aa390" name="Carga dataset y eliminacion de columnas de la target" color="#378add" meeting="false" start="2026-03-01" duration="1" complete="100" expand="true"/>
+            <task id="802" uid="724b2a365a89456da6d6bd00ade0327a" name="[BLOQUEANTE] Separacion y guardado dataset validacion 30pct" color="#071d49" meeting="false" start="2026-03-02" duration="1" complete="100" expand="true"/>
+            <task id="803" uid="28a6688db54742c282288e7b3ff608c7" name="[BLOQUEANTE] Separacion y guardado dataset de trabajo 70pct" color="#071d49" meeting="false" start="2026-03-02" duration="1" complete="100" expand="true"/>
+            <task id="804" uid="b7a8fb6874124594aacd2d346954d6e5" name="Exploracion inicial: dimensiones, tipos y valores unicos" color="#378add" meeting="false" start="2026-03-03" duration="2" complete="100" expand="true"/>
+            <task id="805" uid="b7ac11bbf3df472f889428bd7d7899ea" name="Separacion en datasets numerico y categorico" color="#378add" meeting="false" start="2026-03-05" duration="1" complete="100" expand="true"/>
+            <task id="806" uid="8dbd22bd9eb34e59bf541005b2fccdde" name="Identificacion y gestion de nulos en categoricas" color="#378add" meeting="false" start="2026-03-06" duration="2" complete="100" expand="true"/>
+            <task id="807" uid="60504fd252314c2aa9660d1a829a4b6d" name="Agrupacion de categorias poco frecuentes en OTROS" color="#378add" meeting="false" start="2026-03-08" duration="2" complete="100" expand="true"/>
+            <task id="808" uid="ee11a56570744637b27f7e016f96be81" name="Normalizacion de valores inconsistentes en categoricas" color="#378add" meeting="false" start="2026-03-10" duration="1" complete="100" expand="true"/>
+            <task id="809" uid="8426a27c23cb49a1a5c7076c6deefeab" name="Analisis estadistico de variables numericas" color="#378add" meeting="false" start="2026-03-11" duration="2" complete="100" expand="true"/>
+            <task id="810" uid="7f62a7167f294943a0ac2bbc19e22797" name="EDA categoricas: frecuencias y graficos de barras" color="#378add" meeting="false" start="2026-03-11" duration="2" complete="100" expand="true"/>
+            <task id="811" uid="10cbe17ecf5b4cb2b128490bb18f6500" name="EDA numericas: estadisticos ampliados y distribuciones" color="#378add" meeting="false" start="2026-03-13" duration="2" complete="100" expand="true"/>
+            <task id="812" uid="7264ad69b7de429587e639713c22bfbb" name="Guardado de datasets tras calidad de datos y EDA" color="#378add" meeting="false" start="2026-03-15" duration="1" complete="100" expand="true"/>
+        </task>
+        <task id="904" uid="1b4c88e1dcd340c19d99f474c00e2297" name="Hito: Plan de desarrollo de producto" color="#993c1d" meeting="true" start="2026-03-24" duration="0" complete="0" expand="true"/>
+        <task id="9" uid="57d3a4aeac0a480b94e2313cc1b0dbf5" name="B9 · Transformacion de datos" color="#0f6e56" meeting="false" start="2026-03-16" duration="16" complete="0" expand="true">
+            <task id="9001" uid="22001947889b4786a5597c737c3025d6" name="Separacion de la variable target" color="#1d9e75" meeting="false" start="2026-03-16" duration="1" complete="0" expand="true"/>
+            <task id="9002" uid="cb089ca00e5748a3ac3709dcdea35eb9" name="One Hot Encoding (variables nominales sin orden)" color="#1d9e75" meeting="false" start="2026-03-17" duration="2" complete="0" expand="true"/>
+            <task id="9003" uid="d834fe4f8e12412fa8319c30eb53b6e6" name="Ordinal Encoding (variables con orden natural)" color="#1d9e75" meeting="false" start="2026-03-17" duration="2" complete="0" expand="true"/>
+            <task id="9004" uid="1e8fe20795034e1f9f054e082254fc7a" name="Target Encoding (variables con alta cardinalidad)" color="#1d9e75" meeting="false" start="2026-03-19" duration="2" complete="0" expand="true"/>
+            <task id="9005" uid="8dc6cd76363943f78236fc1abf775f40" name="Tratamiento variables de fecha (antiguedad, diferencias)" color="#1d9e75" meeting="false" start="2026-03-19" duration="2" complete="0" expand="true"/>
+            <task id="9006" uid="41eca29eb8ea4e2a935890e41b0010b5" name="Tratamiento texto amenities (tokenizacion, stopwords, binarias)" color="#1d9e75" meeting="false" start="2026-03-21" duration="3" complete="0" expand="true"/>
+            <task id="9007" uid="2e3050b39cdb47c58cfdfc5f6d504a05" name="Transformacion numericas: discretizacion y normalizacion" color="#1d9e75" meeting="false" start="2026-03-21" duration="3" complete="0" expand="true"/>
+            <task id="9008" uid="688a5cd341ee416b9d84b1dbae57f056" name="Reescalado (MinMax / Standard / Robust segun algoritmos)" color="#1d9e75" meeting="false" start="2026-03-24" duration="3" complete="0" expand="true"/>
+            <task id="9009" uid="38ed779e22124d8d8798681d3cd0fed4" name="Unificacion en tablon analitico y eliminacion nulos residuales" color="#1d9e75" meeting="false" start="2026-03-27" duration="3" complete="0" expand="true"/>
+            <task id="9010" uid="65c8c564bc2a4d23a528350eef0e047e" name="Guardado del tablon analitico" color="#1d9e75" meeting="false" start="2026-03-30" duration="2" complete="0" expand="true"/>
+        </task>
+        <task id="10" uid="f73024875983424a837c95beb728638c" name="B10 · Preseleccion de variables" color="#0f6e56" meeting="false" start="2026-04-01" duration="11" complete="0" expand="true">
+            <task id="1001" uid="0c36d247f7194e07b9c42c747a16d98f" name="[BLOQUEANTE] Separacion de predictoras y target" color="#3c3489" meeting="false" start="2026-04-01" duration="1" complete="0" expand="true"/>
+            <task id="1002" uid="5ab8bbf2c4f2433e8755c9da6d8e48f2" name="Mutual Information" color="#1d9e75" meeting="false" start="2026-04-02" duration="2" complete="0" expand="true"/>
+            <task id="1003" uid="9abbc0c104204c3581ad9767dc568a2d" name="Recursive Feature Elimination (RFE)" color="#1d9e75" meeting="false" start="2026-04-02" duration="2" complete="0" expand="true"/>
+            <task id="1004" uid="654332ffc41b4545927a24d6dc35a9b3" name="Permutation Importance" color="#1d9e75" meeting="false" start="2026-04-02" duration="2" complete="0" expand="true"/>
+            <task id="1005" uid="707ddf8db12742bb8b0291514f1a7092" name="Combinacion de metodos mediante Super Ranking" color="#1d9e75" meeting="false" start="2026-04-04" duration="2" complete="0" expand="true"/>
+            <task id="1006" uid="c6fff457d97c4b9c9c6a176857ad043d" name="Analisis de correlaciones entre variables" color="#1d9e75" meeting="false" start="2026-04-06" duration="2" complete="0" expand="true"/>
+            <task id="1007" uid="2ef71464ec8a420980d20195f9a91233" name="Eliminacion de variables con exceso de correlacion" color="#1d9e75" meeting="false" start="2026-04-08" duration="2" complete="0" expand="true"/>
+            <task id="1008" uid="0b62a3ea075b43dcb8ab253009e5845a" name="Seleccion del metodo final y guardado dataset preseleccionado" color="#1d9e75" meeting="false" start="2026-04-10" duration="2" complete="0" expand="true"/>
+        </task>
+        <task id="11" uid="ff13df0fb0b54869880eb1650be0ef46" name="B11 · Balanceo" color="#0f6e56" meeting="false" start="2026-04-12" duration="8" complete="0" expand="true">
+            <task id="1101" uid="f78bd133c36b4a7699247ed9ead52ac8" name="Analisis de la distribucion de clases de la target" color="#1d9e75" meeting="false" start="2026-04-12" duration="1" complete="0" expand="true"/>
+            <task id="1102" uid="c493fd5fd577432e872a44674ce3804f" name="Evaluacion sin balanceo como linea base" color="#1d9e75" meeting="false" start="2026-04-13" duration="1" complete="0" expand="true"/>
+            <task id="1103" uid="276428b3365b4f56a219fe5f25d51a26" name="Undersampling aleatorio (RandomUnderSampler)" color="#1d9e75" meeting="false" start="2026-04-14" duration="2" complete="0" expand="true"/>
+            <task id="1104" uid="366aa34cbe014a32bb668d9ee700d6d5" name="Oversampling aleatorio (RandomOverSampler)" color="#1d9e75" meeting="false" start="2026-04-14" duration="2" complete="0" expand="true"/>
+            <task id="1105" uid="21e77a00289249928bd407adc2cb15c3" name="SMOTE-Tomek (tecnica combinada)" color="#1d9e75" meeting="false" start="2026-04-14" duration="2" complete="0" expand="true"/>
+            <task id="1106" uid="30216df3c1554c178cc205917d15c12e" name="Penalizacion por peso en el modelo (class_weight)" color="#1d9e75" meeting="false" start="2026-04-14" duration="2" complete="0" expand="true"/>
+            <task id="1107" uid="477767bb6ef447a187d7ea50dcbbffa6" name="Comparacion de resultados y seleccion del metodo final" color="#1d9e75" meeting="false" start="2026-04-16" duration="2" complete="0" expand="true"/>
+            <task id="1108" uid="e7570e0f882244a98c101e4d20d711a1" name="Guardado del dataset final balanceado" color="#1d9e75" meeting="false" start="2026-04-18" duration="2" complete="0" expand="true"/>
+        </task>
+        <task id="12" uid="5bd9bb81132b43dc8927fcb905d6f91a" name="B12 · Modelizacion" color="#0f6e56" meeting="false" start="2026-04-20" duration="15" complete="0" expand="true">
+            <task id="1201" uid="be5e5551561a4321a8c90063b8ec16f6" name="[BLOQUEANTE] Separacion train y validacion interna" color="#3c3489" meeting="false" start="2026-04-20" duration="1" complete="0" expand="true"/>
+            <task id="1202" uid="7f14d4ffce0f4e08960e3f0987e15614" name="Regresion Logistica (linea base)" color="#1d9e75" meeting="false" start="2026-04-21" duration="2" complete="0" expand="true"/>
+            <task id="1203" uid="6fee151c80f84d98a0918548f9be48b0" name="Random Forest" color="#1d9e75" meeting="false" start="2026-04-21" duration="2" complete="0" expand="true"/>
+            <task id="1204" uid="27e5e8ab5a684d04a0294f2a4d85acad" name="XGBoost y Gradient Boosting" color="#1d9e75" meeting="false" start="2026-04-21" duration="2" complete="0" expand="true"/>
+            <task id="1205" uid="8d13f9fcb6154d7da7275e2661d224c1" name="Hist Gradient Boosting" color="#1d9e75" meeting="false" start="2026-04-21" duration="2" complete="0" expand="true"/>
+            <task id="1206" uid="5cf351fd42d544f5a2c61ea926f04086" name="Optimizacion hiperparametros (Grid / Random Search + CV)" color="#1d9e75" meeting="false" start="2026-04-23" duration="4" complete="0" expand="true"/>
+            <task id="1207" uid="b352d7ec3d8d46159b49d6ba80817634" name="Evaluacion: ROC AUC, Precision, Recall, F1, Matriz confusion" color="#1d9e75" meeting="false" start="2026-04-27" duration="2" complete="0" expand="true"/>
+            <task id="1208" uid="f672bffc51f84932a6ccd9b1cc7f444e" name="Reporting del modelo: Gain Chart, Lift Chart, Curva ROC" color="#1d9e75" meeting="false" start="2026-04-29" duration="2" complete="0" expand="true"/>
+            <task id="1209" uid="4f649c7ddeeb4e39b61edf6147060c26" name="Seleccion del modelo final" color="#1d9e75" meeting="false" start="2026-05-01" duration="4" complete="0" expand="true"/>
+        </task>
+        <task id="13" uid="eca3dee4625f4d0ab87a20449513200f" name="B13 · Preparacion del codigo de produccion" color="#0f6e56" meeting="false" start="2026-05-05" duration="15" complete="0" expand="true">
+            <task id="1301" uid="3031fbf84faa4b1284b7fcd51678226c" name="Encapsulacion de transformaciones en FunctionTransformers" color="#1d9e75" meeting="false" start="2026-05-05" duration="3" complete="0" expand="true"/>
+            <task id="1302" uid="a5b60110b5414558991ac10419921266" name="Creacion y serializacion de pipelines individuales por etapa" color="#1d9e75" meeting="false" start="2026-05-08" duration="3" complete="0" expand="true"/>
+            <task id="1303" uid="57ed8ba9197741fc8f0b840c9a9c1bf0" name="Definicion de la lista de variables finales del modelo" color="#1d9e75" meeting="false" start="2026-05-08" duration="2" complete="0" expand="true"/>
+            <task id="1304" uid="2538eb235e454605a5e5e5dc6cd86494" name="Instanciacion del modelo final con hiperparametros optimos" color="#1d9e75" meeting="false" start="2026-05-10" duration="2" complete="0" expand="true"/>
+            <task id="1305" uid="910fb1a02f2846908c68dac5eef76b7d" name="Construccion del ColumnTransformer con todas las transformaciones" color="#1d9e75" meeting="false" start="2026-05-12" duration="2" complete="0" expand="true"/>
+            <task id="1306" uid="d45715935ae54d419b4d48c13d2244ed" name="Creacion del pipeline completo preprocesamiento mas modelo" color="#1d9e75" meeting="false" start="2026-05-14" duration="2" complete="0" expand="true"/>
+            <task id="1307" uid="4dc055e56dff42c9a24b6e3e780367b4" name="Entrenamiento del pipeline de ejecucion sobre dataset completo" color="#1d9e75" meeting="false" start="2026-05-16" duration="2" complete="0" expand="true"/>
+            <task id="1308" uid="22c2c5a5fa604765ba4042b7f74427d4" name="Serializacion del pipeline de ejecucion con cloudpickle" color="#1d9e75" meeting="false" start="2026-05-18" duration="2" complete="0" expand="true"/>
+        </task>
+        <task id="14" uid="71fb85d406e94229aacff226dd25e09f" name="B14 · Codigo de reentrenamiento" color="#0f6e56" meeting="false" start="2026-05-20" duration="7" complete="0" expand="true">
+            <task id="1401" uid="ba471a3f3efe496db4ab38652edd4ba3" name="Definicion de la estrategia de reentrenamiento" color="#1d9e75" meeting="false" start="2026-05-20" duration="2" complete="0" expand="true"/>
+            <task id="1402" uid="a36026ef273443cba20424e8ff9ac067" name="Codigo modular para reentrenar ante nuevos datos" color="#1d9e75" meeting="false" start="2026-05-22" duration="3" complete="0" expand="true"/>
+            <task id="1403" uid="c14349585da24601b7055d283d86fac2" name="Validacion de que el reentrenamiento reproduce resultados" color="#1d9e75" meeting="false" start="2026-05-25" duration="2" complete="0" expand="true"/>
+        </task>
+        <task id="15" uid="9d795ef12a1745c9a502e62441986d4e" name="B15 · Aplicacion en produccion y validacion temporal" color="#0f6e56" meeting="false" start="2026-05-27" duration="5" complete="0" expand="true">
+            <task id="1501" uid="a281709247464c429c8c6d6a82fbca68" name="Carga de datos de nuevo periodo temporal" color="#1d9e75" meeting="false" start="2026-05-27" duration="1" complete="0" expand="true"/>
+            <task id="1502" uid="8b37f6604d264dc1b6999f49f89f2b9a" name="Aplicacion de pipelines serializados sobre nuevos datos" color="#1d9e75" meeting="false" start="2026-05-28" duration="1" complete="0" expand="true"/>
+            <task id="1503" uid="96d804d110bd4f348e7d6e1aae8d140c" name="Obtencion del scoring mediante prediccion del modelo" color="#1d9e75" meeting="false" start="2026-05-29" duration="1" complete="0" expand="true"/>
+            <task id="1504" uid="677f2983603c48e9a860eed84cd0b46b" name="Calculo de metricas de negocio sobre las predicciones" color="#1d9e75" meeting="false" start="2026-05-30" duration="1" complete="0" expand="true"/>
+            <task id="1505" uid="f5ffcb2062a04245861bfb0ae6c6e59c" name="Analisis comparativo de resultados entre periodos" color="#1d9e75" meeting="false" start="2026-05-30" duration="1" complete="0" expand="true"/>
+            <task id="1506" uid="d31b0e88e01b495e9f16ba25091f9d3e" name="Identificacion de los casos mas rentables segun scoring" color="#1d9e75" meeting="false" start="2026-05-31" duration="1" complete="0" expand="true"/>
+        </task>
+        <task id="905" uid="0ebf97ede90d453b9bf98bd4e6182eff" name="Hito: Entrega final del proyecto" color="#993c1d" meeting="true" start="2026-06-01" duration="0" complete="0" expand="true"/>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>

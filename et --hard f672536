@@ -1,0 +1,60 @@
+[33me919370[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to origin/main
+[33m8a94936[m HEAD@{1}: commit: Eliminados archivos pesados .gz y actualizando notebooks
+[33m773d6d2[m HEAD@{2}: reset: moving to HEAD~1
+[33mf672536[m HEAD@{3}: commit: Actualización: limpieza de archivos pesados y nuevos notebooks
+[33m773d6d2[m HEAD@{4}: reset: moving to HEAD~1
+[33mf29a9f2[m HEAD@{5}: commit: Actualización diaria 2026-03-26
+[33m773d6d2[m HEAD@{6}: commit: Actualización diaria 2026-03-26
+[33m8a1a5d9[m HEAD@{7}: commit: Actualización diaria 2026-03-25
+[33m826166c[m HEAD@{8}: commit: Actualización diaria 2026-03-24
+[33m2432eab[m HEAD@{9}: commit: Actualización diaria 2026-03-18
+[33ma83c267[m HEAD@{10}: commit: Actualización diaria 2026-03-18
+[33m7e25cfe[m HEAD@{11}: commit: Actualización diaria 2026-03-17
+[33m19a1906[m HEAD@{12}: commit: Actualización diaria 2026-03-11
+[33m24efc75[m HEAD@{13}: commit: Actualización diaria 2026-03-11
+[33me919370[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{14}: commit: Actualización diaria 2026-02-12
+[33m314ba57[m HEAD@{15}: commit: Actualización diaria 2026-02-11
+[33ma160161[m HEAD@{16}: commit: Actualización diaria 2026-02-11
+[33m443b08c[m HEAD@{17}: commit: Actualización diaria 2026-02-11
+[33mdf42038[m HEAD@{18}: commit: Actualización diaria 2026-02-11
+[33mc12a587[m HEAD@{19}: commit: Actualización diaria 2026-02-10
+[33m60be740[m HEAD@{20}: commit: Actualización diaria 2026-02-10
+[33m67b6acd[m HEAD@{21}: commit: Actualización diaria 2026-02-10
+[33mb8908ea[m HEAD@{22}: commit: Actualización diaria 2026-02-09
+[33ma46c41c[m HEAD@{23}: commit: Actualización diaria 2026-02-06
+[33mf1993e6[m HEAD@{24}: commit: Actualización diaria 2026-02-06
+[33mb8c87f7[m HEAD@{25}: commit: Actualización diaria 2026-02-06
+[33md91506d[m HEAD@{26}: commit: Actualización diaria 2026-02-06
+[33m93ea66e[m HEAD@{27}: commit: Actualización diaria 2026-02-05
+[33ma6b8995[m HEAD@{28}: commit: Actualización diaria 2026-02-04
+[33mced8ba1[m HEAD@{29}: commit: Actualización diaria 2026-02-04
+[33m120a880[m HEAD@{30}: commit: Actualización diaria 2026-02-04
+[33m82f6a22[m HEAD@{31}: commit: Actualización diaria 2026-02-03
+[33md3443c0[m HEAD@{32}: commit: Actualización diaria 2026-02-03
+[33me165e6a[m HEAD@{33}: commit: Actualización diaria 2026-02-03
+[33mba6c9cd[m HEAD@{34}: commit: Actualización diaria 2026-02-02
+[33m3564d66[m HEAD@{35}: commit: Actualización diaria 2026-01-28
+[33md254289[m HEAD@{36}: commit: Actualización diaria 2026-01-28
+[33m67801f9[m HEAD@{37}: commit: Actualización diaria 2026-01-22
+[33m5bbcc7b[m HEAD@{38}: commit: Actualización diaria 2026-01-22
+[33m4227063[m HEAD@{39}: commit: Actualización diaria 2026-01-22
+[33m6e75447[m HEAD@{40}: commit: Actualización diaria 2026-01-22
+[33mad3bdb8[m HEAD@{41}: commit: Actualización diaria 2026-01-22
+[33m1f045ca[m HEAD@{42}: commit: Actualización diaria 2026-01-22
+[33m6aa0705[m HEAD@{43}: commit: Actualización diaria 2026-01-22
+[33m2b49f5b[m HEAD@{44}: commit: Actualización diaria 2026-01-14
+[33m6af4af5[m HEAD@{45}: commit: Actualización diaria 2026-01-14
+[33m9e78a1a[m HEAD@{46}: commit: Actualización diaria 2026-01-12
+[33mcf0eb73[m HEAD@{47}: commit: Actualización diaria 2026-01-12
+[33m906bb9a[m HEAD@{48}: commit: Actualización diaria 2026-01-12
+[33m6b300f1[m HEAD@{49}: pull origin main --rebase (finish): returning to refs/heads/main
+[33m6b300f1[m HEAD@{50}: pull origin main --rebase (pick): Actualización diaria 2026-01-12
+[33m0742411[m HEAD@{51}: pull origin main --rebase (pick): Actualización diaria de notebooks y ejercicios personales 2026-01-12
+[33m617a46f[m HEAD@{52}: pull origin main --rebase (pick): Actualización diaria automática 2026-01-12
+[33me734dbf[m HEAD@{53}: pull origin main --rebase (pick): Actualización diaria de notebooks y ejercicios personales 2026-01-12
+[33m969e03f[m HEAD@{54}: pull origin main --rebase (pick): Actualización diaria de notebooks y ejercicios personales 2026-01-09
+[33m072dbac[m HEAD@{55}: pull origin main --rebase (start): checkout 072dbac1b7ee238e8d763110a8848db8dfa55807
+[33mfdc102e[m HEAD@{56}: commit: Actualización diaria 2026-01-12
+[33macc4b38[m HEAD@{57}: commit: Actualización diaria de notebooks y ejercicios personales 2026-01-12
+[33m9c9df5a[m HEAD@{58}: commit: Actualización diaria automática 2026-01-12
+[33md85ce53[m HEAD@{59}: commit: Actualización diaria de notebooks y ejercicios personales 2026-01-12

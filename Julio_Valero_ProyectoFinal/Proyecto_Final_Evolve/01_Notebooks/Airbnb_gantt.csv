@@ -1,0 +1,40 @@
+"WBS #","Name / Title",Type,"Start Date","End Date","Duration (days)","Due in (days)","Estimated Hours","Actual Hours","Progress (%)",Points,Assigned,Predecessors,Notes,Comments,"Task Color"
+1,Airbnb,project,2026-01-01,2026-02-27,,,0,0,0,,,,,,
+1.1,"Bloque 1: Configuración e Infraestructura (Set Up)",group,2026-01-01,2026-01-02,,,0,0,0,,,,,,
+1.1.1,"Tarea 1.1: Ingesta y Auditoría Técnica",subgroup,2026-01-01,2026-01-02,,,0,0,0,,,,,,
+1.1.1.1,"Carga de fuentes de datos (conexión a BD o archivos planos).",task,2026-01-01,2026-01-01,1,-49,0,0,0,,,,,,blue2
+1.1.1.2,"Inspección de calidad inicial y validación de tipos de datos.",task,2026-01-02,2026-01-02,1,-48,0,0,0,,,1.1.1.1,,,blue2
+1.2,"Bloque 2: Protocolo de Calidad de Datos",group,2026-01-05,2026-02-10,,,0,0,0,,,,,,
+1.2.1,"Tarea 2.1: Limpieza Estructural",subgroup,2026-01-05,2026-01-08,,,0,0,0,,,,,,
+1.2.1.1,"Estandarización de nombres de columnas mediante `clean_names`",task,2026-01-05,2026-01-06,2,-46,0,0,0,,,1.1.1.2,,,blue2
+1.2.1.2,"Conversión de tipos y formateo de variables críticas.",task,2026-01-07,2026-01-08,2,-44,0,0,0,,,1.2.1.1,,,blue2
+1.2.2,"Tarea 2.2: Gestión Condicional de Nulos",subgroup,,,,,0,0,0,,,,,,
+1.2.3,"Análisis de representatividad de valores ausentes.",task,2026-01-09,2026-01-16,6,-38,0,0,0,,,1.2.1.2,,,blue2
+1.2.4,"Ejecución de descartes o imputaciones según importancia de negocio.",task,2026-01-19,2026-01-30,10,-28,0,0,0,,,1.2.3,,,blue2
+1.2.5,"Tarea 2.3: Tratamiento de Valores Atípicos",subgroup,2026-02-02,2026-02-10,,,0,0,0,,,,,,
+1.2.5.1,"Detección de outliers y registros duplicados.",task,2026-02-02,2026-02-10,7,-21,0,0,0,,,1.2.4,,,blue2
+1.3,"Bloque 3: Construcción del Datamart Analítico",group,2026-02-11,2026-02-27,,,0,0,0,,,,,,
+1.3.1,"Tarea 3.1: Ingeniería de Datos",subgroup,2026-02-11,2026-02-17,,,0,0,0,,,,,,
+1.3.1.1,"Integración de tablas mediante cruces de información relacional.",task,2026-02-11,2026-02-17,5,-16,0,0,0,,,1.2.5.1,,,blue2
+1.3.2,"Tarea 3.2: Creación de Variables de Negocio",subgroup,2026-02-18,2026-02-27,,,0,0,0,,,,,,
+1.3.2.1,"Cálculo de KPIs de rentabilidad y palancas de valor.",task,2026-02-18,2026-02-27,8,-8,0,0,0,,,1.3.1.1,,,blue2
+1.4,"Bloque 4: Análisis Exploratorio e Insights",group,,,,,0,0,0,,,,,,
+1.4.1,"Tarea 4.1: Generación de Insights",subgroup,,,,,0,0,0,,,,,,
+1.4.1.1,"Análisis de patrones y validación de hipótesis de negocio.",task,,,0,,0,0,0,,,,,,blue2
+1.4.2,"Tarea 4.2: Segmentación de Datos",subgroup,,,,,0,0,0,,,,,,
+1.4.2.1,"Identificación de focos de valor y zonas geográficas prioritarias.",task,,,0,,0,0,0,,,,,,blue2
+1.5,"Bloque 5: Machine Learning Pipeline",group,,,,,0,0,0,,,,,,
+1.5.1,"Tarea 5.1: Preselección de Variables",subgroup,,,,,0,0,0,,,,,,
+1.5.1.1,"Evaluación de importancia mediante `mutual_info` y `RFE`.",task,,,0,,0,0,0,,,,,,blue2
+1.5.2,"Tarea 5.2: Tratamiento de Desbalanceo",subgroup,,,,,0,0,0,,,,,,
+1.5.2.1,"Análisis de la variable target y aplicación técnica de balanceo (`SMOTE`, `UnderSampling`) si se requiere.",task,,,0,,0,0,0,,,,,,blue2
+1.5.3,"Tarea 5.3: Modelización Multitarea",subgroup,,,,,0,0,0,,,,,,
+1.5.3.1,"Ejecución de modelos de Clasificación, Regresión y No Supervisado.",task,,,0,,0,0,0,,,,,,blue2
+1.5.3.2,"Optimización de hiperparámetros y métricas de rendimiento.",task,,,0,,0,0,0,,,,,,blue2
+1.6,"Bloque 6: Industrialización y Despliegue",group,,,,,0,0,0,,,,,,
+1.6.1,"Tarea 6.1: Refactorización para Producción",subgroup,,,,,0,0,0,,,,,,
+1.6.1.1,"Transformación de código experimental a módulos productivos.",task,,,0,,0,0,0,,,,,,blue2
+1.6.2,"Tarea 6.2: Implementación de Reentrenamiento SOFT",subgroup,,,,,0,0,0,,,,,,
+1.6.2.1,"Creación de scripts para actualizar modelos manteniendo la lógica original.",task,,,0,,0,0,0,,,,,,blue2
+1.6.3,"Tarea 6.3: Desarrollo del Código de Ejecución",subgroup,,,,,0,0,0,,,,,,
+1.6.3.1,"Empaquetado final (`cloudpickle`) y despliegue del script de inferencia.",task,,,0,,0,0,0,,,,,,blue2

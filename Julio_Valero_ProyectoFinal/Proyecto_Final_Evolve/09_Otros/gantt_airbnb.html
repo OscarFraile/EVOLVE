@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Gantt · Proyecto Final Evolve · AirBnb Madrid</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0F0F1A; font-family: 'Segoe UI', sans-serif; color: #ddd; }
+
+  #header {
+    position: sticky; top: 0; z-index: 100;
+    background: #0F0F1A;
+    border-bottom: 2px solid #333355;
+    padding: 10px 0 6px 0;
+  }
+  #title {
+    text-align: center;
+    font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
+  }
+  #subtitle {
+    text-align: center;
+    font-size: 11px; color: #8888BB; margin-top: 2px;
+  }
+  #controls {
+    text-align: center; margin-top: 6px;
+  }
+  #controls button {
+    background: #1E1E3A; color: #aaa; border: 1px solid #333355;
+    padding: 3px 12px; margin: 0 3px; cursor: pointer; border-radius: 4px;
+    font-size: 12px;
+  }
+  #controls button:hover { background: #2a2a50; color: #fff; }
+  #controls span { font-size: 12px; color: #777; margin: 0 8px; }
+
+  #gantt-container {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  #label-col {
+    min-width: 300px;
+    max-width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    left: 0;
+    z-index: 50;
+    background: #0F0F1A;
+    border-right: 1px solid #333355;
+  }
+  .label-header {
+    height: 32px;
+    background: #1A1A2E;
+    border-bottom: 1px solid #333355;
+    display: flex; align-items: center; padding-left: 10px;
+    font-size: 11px; color: #666; font-weight: 600;
+  }
+
+  #chart-col {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+  #timeline-header {
+    height: 32px;
+    position: relative;
+    background: #1A1A2E;
+    border-bottom: 1px solid #333355;
+  }
+  .month-cell {
+    position: absolute; top: 0; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: #AAAACC;
+    border-left: 1px solid #333355;
+  }
+  .week-line {
+    position: absolute; top: 0; bottom: 0;
+    width: 1px; background: rgba(255,255,255,0.04); pointer-events: none;
+  }
+  .today-line {
+    position: absolute; top: 0; bottom: 0;
+    width: 2px; background: #FF1744; opacity: 0.85;
+    pointer-events: none; z-index: 10;
+  }
+  .today-label {
+    position: absolute; top: 4px;
+    font-size: 9px; font-weight: 700; color: #FF1744;
+    white-space: nowrap; z-index: 11;
+  }
+
+  .gantt-row {
+    display: flex; height: 28px; align-items: center;
+  }
+  .label-cell {
+    width: 300px; min-width: 300px;
+    padding: 0 6px 0 10px;
+    font-size: 11px; color: #ccc;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: default;
+  }
+  .milestone-label {
+    color: #FFD700 !important; font-weight: 700; font-size: 11px;
+  }
+  .bar-cell {
+    flex: 1; position: relative; height: 100%;
+  }
+  .bar-track {
+    position: absolute;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+  .bar-track:hover { filter: brightness(1.25); }
+  .bar-progress {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    border-radius: 4px 0 0 4px;
+  }
+  .bar-label {
+    position: absolute; left: 4px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px; color: #fff; font-weight: 600;
+    white-space: nowrap; pointer-events: none;
+    text-shadow: 0 1px 2px #000;
+  }
+  .milestone-diamond {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px;
+    background: #B71C1C;
+    border: 2px solid #FFD700;
+    rotate: 45deg;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+  .milestone-diamond:hover { filter: brightness(1.4); }
+
+  #legend {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    padding: 10px 16px;
+    background: #1A1A2E;
+    border-top: 1px solid #333355;
+    font-size: 11px; color: #aaa;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="title">PROYECTO FINAL EVOLVE · Análisis de Inversión Inmobiliaria AirBnb Madrid</div>
+  <div id="subtitle">Master Data Science · Julio Valero &nbsp;|&nbsp; Hoy: 16/03/2026</div>
+  <div id="controls">
+    <button onclick="zoom(-1)">− Zoom</button>
+    <span id="zoom-label">100%</span>
+    <button onclick="zoom(1)">+ Zoom</button>
+    <button onclick="scrollToToday()">Ir a HOY</button>
+  </div>
+</div>
+
+<div id="gantt-container">
+  <div id="label-col">
+    <div class="label-header">Tarea</div>
+    <div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B1 · Definición y planificación del proyecto</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Definición del objetivo de negocio</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Identificación de palancas de rentabilidad</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Definición de KPIs por palanca</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Identificación de entidades y fuentes de datos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Formulación de preguntas semilla por eje de análisis</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="color:#FFD700;font-weight:700;">Hito: Primeras ideas de proyecto fin de máster</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B2 · Configuración del entorno y setup del proyecto</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación del entorno Conda con versiones específicas</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Importación y verificación de librerías</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación de estructura de directorios</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="color:#FFD700;font-weight:700;">Hito: Definición del MVP</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B3 · Adquisición y exploración inicial de datos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Carga y exploración de ficheros AirBnB disponibles</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Decisión sobre qué tablas usar y descartar</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Obtención datos precio m2 (web scraping Idealista)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación base de datos SQLite y carga de tablas</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B4 · Creación del datamart analítico</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Eliminación de variables irrelevantes o redundantes</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Normalización de nombres de columnas</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Imputación nulos price (media por barrio y aforo)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Imputación nulos beds (regla por accommodates)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Imputación nulos bedrooms (regla por beds)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Tratamiento bathrooms y bathrooms_text</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Imputación variables de reviews (scores y fechas)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Tratamiento host_response_time y acceptance_rate</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Binarización de license y has_availability</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Imputación host_is_superhost por condiciones negocio</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Eliminación registros con demasiados nulos (thresh)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Análisis y eliminación de duplicados</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Conversión de variables de fecha a formato uniforme</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Detección y tratamiento atípicos (price, min/max)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Eliminación de hoteles y hostels del dataset</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Limpieza precio m2 (unidades y separadores de miles)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Join listings, listings_det y precio_m2 por distrito</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Resolución de inconsistencias en nombres de distritos</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Guardado del datamart en base de datos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="color:#FFD700;font-weight:700;">Hito: Diseño del flujo de la solución y MVP</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B5 · Preparación de variables para análisis</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Creación KPI precio_total (lógica por tipo alquiler)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación KPI ocupación desde availability_365</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Discretización manual bedrooms (Estudio,1,2,3,4+)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Discretización automática percentiles</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Estimación de m2 por número de dormitorios</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Cálculo precio_compra estimado (m2 x precio_m2 x dto)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Distancia geoespacial a Puerta del Sol (Haversine)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación variable target pisos_rentables (umbral 10a)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Guardado del dataset preparado en base de datos</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B6 · Análisis e Insights</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Estadísticos descriptivos y rango de precios</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Ranking de distritos y barrios por precio mediano</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Análisis caso atípico San Blas (eventos deportivos)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Scatter precio_compra vs precio_total por zona</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Minicubo precio: bedrooms, beds, accommodates</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Análisis relación número de camas vs precio</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Análisis distancia puntos de interés vs precio</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Análisis ocupación: estadísticos y ranking distritos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Minicubo ocupación: bedrooms, beds, accommodates</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Visualización geográfica en mapa interactivo (Folium)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Síntesis de 8 insights de negocio accionables</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B7 · Comunicación de resultados</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Redacción del contexto y objetivos del análisis</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Elaboración de conclusiones ejecutivas</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Construcción de 5 exhibits gráficos de soporte</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Recomendaciones para equipo de valoraciones</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B8 · Exploración, calidad de datos y EDA para ML</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Carga dataset y eliminación de columnas de la target</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="color:#FF9800;font-weight:600;">[BLOQ] Separación dataset validación 30%</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="color:#FF9800;font-weight:600;">[BLOQ] Separación dataset de trabajo 70%</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Exploración inicial: dimensiones, tipos y únicos</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Separación en datasets numérico y categórico</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Identificación y gestión de nulos en categóricas</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Agrupación de categorías poco frecuentes en OTROS</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Normalización de valores inconsistentes</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Análisis estadístico de variables numéricas</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">EDA categóricas: frecuencias y gráficos de barras</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">EDA numéricas: estadísticos ampliados y distribución</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Guardado de datasets tras calidad de datos y EDA</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B9 · Transformación de datos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Separación de la variable target</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">One Hot Encoding (variables nominales sin orden)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Ordinal Encoding (variables con orden natural)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Target Encoding (variables con alta cardinalidad)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Tratamiento variables de fecha (antigüedad, diffs)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Tratamiento texto amenities (tokenización, binarias)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Transformación numéricas: discretización y normaliz.</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Reescalado (MinMax / Standard / Robust según algos)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Unificación en tablón analítico y eliminación nulos</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Guardado del tablón analítico</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="color:#FFD700;font-weight:700;">Hito: Plan de desarrollo de producto</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B10 · Preselección de variables</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="color:#FF9800;font-weight:600;">[BLOQ] Separación de predictoras y target</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Mutual Information</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Recursive Feature Elimination (RFE)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Permutation Importance</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Combinación de métodos mediante Super Ranking</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Análisis de correlaciones entre variables</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Eliminación de variables con exceso de correlación</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Selección método final y guardado dataset preselec.</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B11 · Balanceo</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Análisis de la distribución de clases de la target</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Evaluación sin balanceo como línea base</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Undersampling aleatorio (RandomUnderSampler)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Oversampling aleatorio (RandomOverSampler)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">SMOTE-Tomek (técnica combinada)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Penalización por peso en el modelo (class_weight)</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Comparación de resultados y selección método final</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Guardado del dataset final balanceado</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B12 · Modelización</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="color:#FF9800;font-weight:600;">[BLOQ] Separación train y validación interna</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Regresión Logística (línea base)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Random Forest</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">XGBoost y Gradient Boosting</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Hist Gradient Boosting</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Optimización hiperparámetros (Grid/Random Search+CV)</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Evaluación: ROC AUC, Precision, Recall, F1, Matriz</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Reporting: Gain Chart, Lift Chart, Curva ROC</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Selección del modelo final</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B13 · Preparación del código de producción</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Encapsulación de transformaciones en FunctionTransf.</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación y serialización de pipelines por etapa</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Definición de la lista de variables finales del modelo</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Instanciación del modelo final con hiperparms óptimos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Construcción del ColumnTransformer completo</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Creación del pipeline completo preprocesamiento+modelo</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Entrenamiento pipeline sobre dataset completo</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Serialización del pipeline con cloudpickle</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B14 · Código de reentrenamiento</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Definición de la estrategia de reentrenamiento</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Código modular para reentrenar ante nuevos datos</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Validación de que el reentrenamiento reproduce result.</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="font-weight:700;font-size:12px;color:#fff;">B15 · Aplicación en producción y validación temporal</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Carga de datos de nuevo periodo temporal</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Aplicación de pipelines serializados sobre nuevos datos</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Obtención del scoring mediante predicción del modelo</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Cálculo de métricas de negocio sobre las predicciones</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="">Análisis comparativo de resultados entre periodos</div></div><div class="gantt-row" style="background:#16213E;"><div class="label-cell" style="">Identificación de los casos más rentables por scoring</div></div><div class="gantt-row" style="background:#1A1A2E;"><div class="label-cell" style="color:#FFD700;font-weight:700;">Hito: Entrega final del proyecto</div></div>
+  </div>
+  <div id="chart-col">
+    <div id="timeline-header">
+      <div class="month-cell" style="left:3.004291845493562%;width:12.875536480686694%;">Nov 2025</div><div class="month-cell" style="left:15.879828326180256%;width:13.30472103004292%;">Dec 2025</div><div class="month-cell" style="left:29.184549356223176%;width:13.304721030042916%;">Jan 2026</div><div class="month-cell" style="left:42.48927038626609%;width:12.017167381974254%;">Feb 2026</div><div class="month-cell" style="left:54.506437768240346%;width:13.304721030042927%;">Mar 2026</div><div class="month-cell" style="left:67.81115879828327%;width:12.875536480686677%;">Apr 2026</div><div class="month-cell" style="left:80.68669527896995%;width:13.304721030042927%;">May 2026</div><div class="month-cell" style="left:93.99141630901288%;width:6.008583690987123%;">Jun 2026</div>
+    </div>
+    <div id="chart-body" style="position:relative;">
+      <div class="week-line" style="left:3.862660944206009%;"></div><div class="week-line" style="left:6.866952789699571%;"></div><div class="week-line" style="left:9.871244635193133%;"></div><div class="week-line" style="left:12.875536480686694%;"></div><div class="week-line" style="left:15.879828326180256%;"></div><div class="week-line" style="left:18.88412017167382%;"></div><div class="week-line" style="left:21.888412017167383%;"></div><div class="week-line" style="left:24.892703862660944%;"></div><div class="week-line" style="left:27.896995708154503%;"></div><div class="week-line" style="left:30.90128755364807%;"></div><div class="week-line" style="left:33.90557939914164%;"></div><div class="week-line" style="left:36.9098712446352%;"></div><div class="week-line" style="left:39.91416309012876%;"></div><div class="week-line" style="left:42.91845493562232%;"></div><div class="week-line" style="left:45.92274678111588%;"></div><div class="week-line" style="left:48.927038626609445%;"></div><div class="week-line" style="left:51.931330472103%;"></div><div class="week-line" style="left:54.93562231759657%;"></div><div class="week-line" style="left:57.93991416309014%;"></div><div class="week-line" style="left:60.94420600858369%;"></div><div class="week-line" style="left:63.94849785407726%;"></div><div class="week-line" style="left:66.95278969957081%;"></div><div class="week-line" style="left:69.95708154506438%;"></div><div class="week-line" style="left:72.96137339055794%;"></div><div class="week-line" style="left:75.9656652360515%;"></div><div class="week-line" style="left:78.96995708154506%;"></div><div class="week-line" style="left:81.97424892703863%;"></div><div class="week-line" style="left:84.97854077253218%;"></div><div class="week-line" style="left:87.98283261802575%;"></div><div class="week-line" style="left:90.98712446351931%;"></div><div class="week-line" style="left:93.99141630901288%;"></div><div class="week-line" style="left:96.99570815450643%;"></div>
+      <div class="today-line" id="today-line" style="left:60.94420600858369%;"></div>
+      <div class="today-label" id="today-label" style="left:calc(60.94420600858369% + 4px);">HOY</div>
+      
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:3.004291845493562%;width:8.583690987124463%;height:22px;top:calc(50% - 11px);background:#1565C0;border:1px solid #90CAF933;" title="B1 · Definición y planificación del proyecto · 01/11/2025 → 20/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#1565C0;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/11–20/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:3.004291845493562%;width:1.7167381974248932%;height:16px;top:calc(50% - 8px);background:#90CAF933;border:1px solid #1565C0;" title="Definición del objetivo de negocio · 01/11/2025 → 04/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#1565C0;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/11–04/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:4.721030042918455%;width:1.287553648068669%;height:16px;top:calc(50% - 8px);background:#90CAF933;border:1px solid #1565C0;" title="Identificación de palancas de rentabilidad · 05/11/2025 → 07/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#1565C0;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/11–07/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:6.008583690987124%;width:1.2875536480686698%;height:16px;top:calc(50% - 8px);background:#90CAF933;border:1px solid #1565C0;" title="Definición de KPIs por palanca · 08/11/2025 → 10/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#1565C0;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">08/11–10/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:7.296137339055794%;width:1.7167381974248928%;height:16px;top:calc(50% - 8px);background:#90CAF933;border:1px solid #1565C0;" title="Identificación de entidades y fuentes de datos · 11/11/2025 → 14/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#1565C0;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">11/11–14/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:9.012875536480687%;width:2.575107296137338%;height:16px;top:calc(50% - 8px);background:#90CAF933;border:1px solid #1565C0;" title="Formulación de preguntas semilla por eje de análisis · 15/11/2025 → 20/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#1565C0;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">15/11–20/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+        
+        <div class="gantt-row" style="background:#1A1A2E;">          <div class="bar-cell">
+            <div class="milestone-diamond" style="left:calc(11.587982832618025% - 8px);" title="Hito: Primeras ideas de proyecto fin de máster · 21/11/2025 · ✔ Completado"></div>
+          </div>
+        </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:11.587982832618025%;width:9.012875536480689%;height:22px;top:calc(50% - 11px);background:#6A1B9A;border:1px solid #CE93D833;" title="B2 · Configuración del entorno y setup del proyecto · 21/11/2025 → 11/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#6A1B9A;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/11–11/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:11.587982832618025%;width:3.862660944206011%;height:16px;top:calc(50% - 8px);background:#CE93D833;border:1px solid #6A1B9A;" title="Creación del entorno Conda con versiones específicas · 21/11/2025 → 29/11/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#6A1B9A;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/11–29/11 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:15.450643776824036%;width:2.1459227467811157%;height:16px;top:calc(50% - 8px);background:#CE93D833;border:1px solid #6A1B9A;" title="Importación y verificación de librerías · 30/11/2025 → 04/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#6A1B9A;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">30/11–04/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:17.59656652360515%;width:3.0042918454935617%;height:16px;top:calc(50% - 8px);background:#CE93D833;border:1px solid #6A1B9A;" title="Creación de estructura de directorios · 05/12/2025 → 11/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#6A1B9A;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/12–11/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+        
+        <div class="gantt-row" style="background:#16213E;">          <div class="bar-cell">
+            <div class="milestone-diamond" style="left:calc(20.600858369098713% - 8px);" title="Hito: Definición del MVP · 12/12/2025 · ✔ Completado"></div>
+          </div>
+        </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:20.600858369098713%;width:6.437768240343349%;height:22px;top:calc(50% - 11px);background:#006064;border:1px solid #80DEEA33;" title="B3 · Adquisición y exploración inicial de datos · 12/12/2025 → 26/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#006064;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/12–26/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:20.600858369098713%;width:2.145922746781114%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #006064;" title="Carga y exploración de ficheros AirBnB disponibles · 12/12/2025 → 16/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#006064;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/12–16/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:22.746781115879827%;width:1.2875536480686698%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #006064;" title="Decisión sobre qué tablas usar y descartar · 17/12/2025 → 19/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#006064;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">17/12–19/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:24.034334763948497%;width:1.7167381974248919%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #006064;" title="Obtención datos precio m2 (web scraping Idealista) · 20/12/2025 → 23/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#006064;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/12–23/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:25.75107296137339%;width:1.2875536480686733%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #006064;" title="Creación base de datos SQLite y carga de tablas · 24/12/2025 → 26/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#006064;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">24/12–26/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:27.038626609442062%;width:10.300429184549351%;height:22px;top:calc(50% - 11px);background:#BF360C;border:1px solid #FFAB9133;" title="B4 · Creación del datamart analítico · 27/12/2025 → 19/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/12–19/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:27.038626609442062%;width:0.8583690987124406%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Eliminación de variables irrelevantes o redundantes · 27/12/2025 → 28/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/12–28/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:27.896995708154503%;width:0.4291845493562292%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Normalización de nombres de columnas · 29/12/2025 → 29/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">29/12–29/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:28.32618025751073%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Imputación nulos price (media por barrio y aforo) · 30/12/2025 → 31/12/2025 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">30/12–31/12 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:29.184549356223176%;width:0.8583690987124477%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Imputación nulos beds (regla por accommodates) · 01/01/2026 → 02/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/01–02/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:30.042918454935624%;width:0.8583690987124477%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Imputación nulos bedrooms (regla por beds) · 03/01/2026 → 04/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">03/01–04/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:30.90128755364807%;width:0.8583690987124406%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Tratamiento bathrooms y bathrooms_text · 05/01/2026 → 06/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/01–06/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:31.759656652360512%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Imputación variables de reviews (scores y fechas) · 07/01/2026 → 08/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">07/01–08/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:32.61802575107296%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Tratamiento host_response_time y acceptance_rate · 09/01/2026 → 10/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">09/01–10/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:33.47639484978541%;width:0.4291845493562292%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Binarización de license y has_availability · 11/01/2026 → 11/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">11/01–11/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:33.90557939914164%;width:0.858369098712437%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Imputación host_is_superhost por condiciones negocio · 12/01/2026 → 13/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/01–13/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:34.763948497854074%;width:0.4291845493562292%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Eliminación registros con demasiados nulos (thresh) · 14/01/2026 → 14/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/01–14/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:35.1931330472103%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Análisis y eliminación de duplicados · 15/01/2026 → 15/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">15/01–15/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:35.622317596566525%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Conversión de variables de fecha a formato uniforme · 16/01/2026 → 16/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">16/01–16/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:36.05150214592275%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Detección y tratamiento atípicos (price, min/max) · 17/01/2026 → 18/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">17/01–18/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:36.9098712446352%;width:0.429184549356215%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Eliminación de hoteles y hostels del dataset · 19/01/2026 → 19/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">19/01–19/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:36.05150214592275%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Limpieza precio m2 (unidades y separadores de miles) · 17/01/2026 → 18/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">17/01–18/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:37.33905579399141%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Join listings, listings_det y precio_m2 por distrito · 20/01/2026 → 21/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/01–21/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:36.48068669527897%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Resolución de inconsistencias en nombres de distritos · 18/01/2026 → 19/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">18/01–19/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:37.33905579399141%;width:0.4291845493562292%;height:16px;top:calc(50% - 8px);background:#FFAB9133;border:1px solid #BF360C;" title="Guardado del datamart en base de datos · 20/01/2026 → 20/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#BF360C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/01–20/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+        
+        <div class="gantt-row" style="background:#16213E;">          <div class="bar-cell">
+            <div class="milestone-diamond" style="left:calc(34.33476394849785% - 8px);" title="Hito: Diseño del flujo de la solución y MVP · 13/01/2026 · ✔ Completado"></div>
+          </div>
+        </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:37.76824034334764%;width:5.579399141630894%;height:22px;top:calc(50% - 11px);background:#2E7D32;border:1px solid #A5D6A733;" title="B5 · Preparación de variables para análisis · 21/01/2026 → 02/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/01–02/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:37.76824034334764%;width:1.2875536480686662%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Creación KPI precio_total (lógica por tipo alquiler) · 21/01/2026 → 23/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/01–23/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:37.76824034334764%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Creación KPI ocupación desde availability_365 · 21/01/2026 → 22/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/01–22/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:39.05579399141631%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Discretización manual bedrooms (Estudio,1,2,3,4+) · 24/01/2026 → 25/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">24/01–25/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:39.05579399141631%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Discretización automática percentiles · 24/01/2026 → 25/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">24/01–25/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:39.91416309012876%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Estimación de m2 por número de dormitorios · 26/01/2026 → 27/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">26/01–27/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:40.772532188841204%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Cálculo precio_compra estimado (m2 x precio_m2 x dto) · 28/01/2026 → 29/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">28/01–29/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:40.772532188841204%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Distancia geoespacial a Puerta del Sol (Haversine) · 28/01/2026 → 29/01/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">28/01–29/01 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:41.63090128755365%;width:1.2875536480686733%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Creación variable target pisos_rentables (umbral 10a) · 30/01/2026 → 01/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">30/01–01/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:42.91845493562232%;width:0.429184549356215%;height:16px;top:calc(50% - 8px);background:#A5D6A733;border:1px solid #2E7D32;" title="Guardado del dataset preparado en base de datos · 02/02/2026 → 02/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#2E7D32;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">02/02–02/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:43.34763948497854%;width:7.296137339055797%;height:22px;top:calc(50% - 11px);background:#283593;border:1px solid #9FA8DA33;" title="B6 · Análisis e Insights · 03/02/2026 → 19/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">03/02–19/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:43.34763948497854%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Estadísticos descriptivos y rango de precios · 03/02/2026 → 04/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">03/02–04/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:44.20600858369099%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Ranking de distritos y barrios por precio mediano · 05/02/2026 → 06/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/02–06/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:45.06437768240343%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Análisis caso atípico San Blas (eventos deportivos) · 07/02/2026 → 08/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">07/02–08/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:45.92274678111588%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Scatter precio_compra vs precio_total por zona · 09/02/2026 → 10/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">09/02–10/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:45.92274678111588%;width:1.2875536480686662%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Minicubo precio: bedrooms, beds, accommodates · 09/02/2026 → 11/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">09/02–11/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:47.21030042918455%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Análisis relación número de camas vs precio · 12/02/2026 → 13/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/02–13/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:47.21030042918455%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Análisis distancia puntos de interés vs precio · 12/02/2026 → 13/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/02–13/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:48.06866952789699%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Análisis ocupación: estadísticos y ranking distritos · 14/02/2026 → 15/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/02–15/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:48.06866952789699%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Minicubo ocupación: bedrooms, beds, accommodates · 14/02/2026 → 15/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/02–15/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:48.927038626609445%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Visualización geográfica en mapa interactivo (Folium) · 16/02/2026 → 17/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">16/02–17/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:49.78540772532189%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#9FA8DA33;border:1px solid #283593;" title="Síntesis de 8 insights de negocio accionables · 18/02/2026 → 19/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#283593;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">18/02–19/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:50.64377682403433%;width:3.862660944206013%;height:22px;top:calc(50% - 11px);background:#AD1457;border:1px solid #F48FB133;" title="B7 · Comunicación de resultados · 20/02/2026 → 28/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#AD1457;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/02–28/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:50.64377682403433%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#F48FB133;border:1px solid #AD1457;" title="Redacción del contexto y objetivos del análisis · 20/02/2026 → 21/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#AD1457;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/02–21/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:51.50214592274678%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#F48FB133;border:1px solid #AD1457;" title="Elaboración de conclusiones ejecutivas · 22/02/2026 → 23/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#AD1457;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">22/02–23/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:52.36051502145923%;width:1.2875536480686662%;height:16px;top:calc(50% - 8px);background:#F48FB133;border:1px solid #AD1457;" title="Construcción de 5 exhibits gráficos de soporte · 24/02/2026 → 26/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#AD1457;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">24/02–26/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:53.648068669527895%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#F48FB133;border:1px solid #AD1457;" title="Recomendaciones para equipo de valoraciones · 27/02/2026 → 28/02/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#AD1457;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/02–28/02 · 100%</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:54.506437768240346%;width:6.437768240343345%;height:22px;top:calc(50% - 11px);background:#455A64;border:1px solid #90A4AE33;" title="B8 · Exploración, calidad de datos y EDA para ML · 01/03/2026 → 15/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/03–15/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:54.506437768240346%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Carga dataset y eliminación de columnas de la target · 01/03/2026 → 01/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/03–01/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:54.93562231759657%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#FF6F0033;border:1.5px solid #FF6F00;" title="[BLOQ] Separación dataset validación 30% · 02/03/2026 → 02/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">02/03–02/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:54.93562231759657%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#FF6F0033;border:1.5px solid #FF6F00;" title="[BLOQ] Separación dataset de trabajo 70% · 02/03/2026 → 02/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">02/03–02/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:55.36480686695279%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Exploración inicial: dimensiones, tipos y únicos · 03/03/2026 → 04/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">03/03–04/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:56.22317596566524%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Separación en datasets numérico y categórico · 05/03/2026 → 05/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/03–05/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:56.65236051502146%;width:0.858369098712437%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Identificación y gestión de nulos en categóricas · 06/03/2026 → 07/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">06/03–07/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:57.5107296137339%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Agrupación de categorías poco frecuentes en OTROS · 08/03/2026 → 09/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">08/03–09/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:58.36909871244635%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Normalización de valores inconsistentes · 10/03/2026 → 10/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">10/03–10/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:58.798283261802574%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Análisis estadístico de variables numéricas · 11/03/2026 → 12/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">11/03–12/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:58.798283261802574%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="EDA categóricas: frecuencias y gráficos de barras · 11/03/2026 → 12/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">11/03–12/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:59.65665236051502%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="EDA numéricas: estadísticos ampliados y distribución · 13/03/2026 → 14/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">13/03–14/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:60.51502145922747%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#90A4AE33;border:1px solid #455A64;" title="Guardado de datasets tras calidad de datos y EDA · 15/03/2026 → 15/03/2026 · 100%">
+          <div class="bar-progress" style="width:100%;background:#455A64;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">15/03–15/03 · 100%</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:60.94420600858369%;width:6.866952789699582%;height:22px;top:calc(50% - 11px);background:#00695C;border:1px solid #80CBC433;" title="B9 · Transformación de datos · 16/03/2026 → 31/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">16/03–31/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:60.94420600858369%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Separación de la variable target · 16/03/2026 → 16/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">16/03–16/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:61.37339055793991%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="One Hot Encoding (variables nominales sin orden) · 17/03/2026 → 18/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">17/03–18/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:61.37339055793991%;width:0.8583690987124513%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Ordinal Encoding (variables con orden natural) · 17/03/2026 → 18/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">17/03–18/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:62.231759656652365%;width:0.858369098712437%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Target Encoding (variables con alta cardinalidad) · 19/03/2026 → 20/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">19/03–20/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:62.231759656652365%;width:0.858369098712437%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Tratamiento variables de fecha (antigüedad, diffs) · 19/03/2026 → 20/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">19/03–20/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:63.0901287553648%;width:1.2875536480686804%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Tratamiento texto amenities (tokenización, binarias) · 21/03/2026 → 23/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/03–23/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:63.0901287553648%;width:1.2875536480686804%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Transformación numéricas: discretización y normaliz. · 21/03/2026 → 23/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/03–23/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:64.37768240343348%;width:1.287553648068652%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Reescalado (MinMax / Standard / Robust según algos) · 24/03/2026 → 26/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">24/03–26/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:65.66523605150213%;width:1.2875536480686804%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Unificación en tablón analítico y eliminación nulos · 27/03/2026 → 29/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/03–29/03</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:66.95278969957081%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#80CBC433;border:1px solid #00695C;" title="Guardado del tablón analítico · 30/03/2026 → 31/03/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00695C;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">30/03–31/03</span>
+        </div>
+      </div>
+    </div>
+        
+        <div class="gantt-row" style="background:#16213E;">          <div class="bar-cell">
+            <div class="milestone-diamond" style="left:calc(64.37768240343348% - 8px);" title="Hito: Plan de desarrollo de producto · 24/03/2026 · Pendiente"></div>
+          </div>
+        </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:67.81115879828327%;width:4.721030042918443%;height:22px;top:calc(50% - 11px);background:#0277BD;border:1px solid #81D4FA33;" title="B10 · Preselección de variables · 01/04/2026 → 11/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/04–11/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:67.81115879828327%;width:0.42918454935620787%;height:16px;top:calc(50% - 8px);background:#FF6F0033;border:1.5px solid #FF6F00;" title="[BLOQ] Separación de predictoras y target · 01/04/2026 → 01/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/04–01/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:68.24034334763948%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Mutual Information · 02/04/2026 → 03/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">02/04–03/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:68.24034334763948%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Recursive Feature Elimination (RFE) · 02/04/2026 → 03/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">02/04–03/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:68.24034334763948%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Permutation Importance · 02/04/2026 → 03/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">02/04–03/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:69.09871244635193%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Combinación de métodos mediante Super Ranking · 04/04/2026 → 05/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">04/04–05/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:69.95708154506438%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Análisis de correlaciones entre variables · 06/04/2026 → 07/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">06/04–07/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:70.81545064377683%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Eliminación de variables con exceso de correlación · 08/04/2026 → 09/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">08/04–09/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:71.67381974248927%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#81D4FA33;border:1px solid #0277BD;" title="Selección método final y guardado dataset preselec. · 10/04/2026 → 11/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#0277BD;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">10/04–11/04</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:72.53218884120172%;width:3.433476394849791%;height:22px;top:calc(50% - 11px);background:#512DA8;border:1px solid #B39DDB33;" title="B11 · Balanceo · 12/04/2026 → 19/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/04–19/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:72.53218884120172%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Análisis de la distribución de clases de la target · 12/04/2026 → 12/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/04–12/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:72.96137339055794%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Evaluación sin balanceo como línea base · 13/04/2026 → 13/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">13/04–13/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:73.39055793991416%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Undersampling aleatorio (RandomUnderSampler) · 14/04/2026 → 15/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/04–15/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:73.39055793991416%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Oversampling aleatorio (RandomOverSampler) · 14/04/2026 → 15/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/04–15/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:73.39055793991416%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="SMOTE-Tomek (técnica combinada) · 14/04/2026 → 15/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/04–15/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:73.39055793991416%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Penalización por peso en el modelo (class_weight) · 14/04/2026 → 15/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/04–15/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:74.2489270386266%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Comparación de resultados y selección método final · 16/04/2026 → 17/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">16/04–17/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:75.10729613733905%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#B39DDB33;border:1px solid #512DA8;" title="Guardado del dataset final balanceado · 18/04/2026 → 19/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#512DA8;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">18/04–19/04</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:75.9656652360515%;width:6.437768240343345%;height:22px;top:calc(50% - 11px);background:#558B2F;border:1px solid #C5E1A533;" title="B12 · Modelización · 20/04/2026 → 04/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/04–04/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:75.9656652360515%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#FF6F0033;border:1.5px solid #FF6F00;" title="[BLOQ] Separación train y validación interna · 20/04/2026 → 20/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/04–20/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:76.39484978540773%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Regresión Logística (línea base) · 21/04/2026 → 22/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/04–22/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:76.39484978540773%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Random Forest · 21/04/2026 → 22/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/04–22/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:76.39484978540773%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="XGBoost y Gradient Boosting · 21/04/2026 → 22/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/04–22/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:76.39484978540773%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Hist Gradient Boosting · 21/04/2026 → 22/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">21/04–22/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:77.25321888412017%;width:1.7167381974248883%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Optimización hiperparámetros (Grid/Random Search+CV) · 23/04/2026 → 26/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">23/04–26/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:78.96995708154506%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Evaluación: ROC AUC, Precision, Recall, F1, Matriz · 27/04/2026 → 28/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/04–28/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:79.82832618025752%;width:0.85836909871243%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Reporting: Gain Chart, Lift Chart, Curva ROC · 29/04/2026 → 30/04/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">29/04–30/04</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:80.68669527896995%;width:1.7167381974249025%;height:16px;top:calc(50% - 8px);background:#C5E1A533;border:1px solid #558B2F;" title="Selección del modelo final · 01/05/2026 → 04/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#558B2F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">01/05–04/05</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:82.40343347639485%;width:6.437768240343345%;height:22px;top:calc(50% - 11px);background:#00838F;border:1px solid #80DEEA33;" title="B13 · Preparación del código de producción · 05/05/2026 → 19/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/05–19/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:82.40343347639485%;width:1.2875536480686662%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Encapsulación de transformaciones en FunctionTransf. · 05/05/2026 → 07/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">05/05–07/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:83.69098712446352%;width:1.2875536480686662%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Creación y serialización de pipelines por etapa · 08/05/2026 → 10/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">08/05–10/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:83.69098712446352%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Definición de la lista de variables finales del modelo · 08/05/2026 → 09/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">08/05–09/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:84.54935622317596%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Instanciación del modelo final con hiperparms óptimos · 10/05/2026 → 11/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">10/05–11/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:85.40772532188842%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Construcción del ColumnTransformer completo · 12/05/2026 → 13/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">12/05–13/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:86.26609442060087%;width:0.85836909871243%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Creación del pipeline completo preprocesamiento+modelo · 14/05/2026 → 15/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">14/05–15/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:87.1244635193133%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Entrenamiento pipeline sobre dataset completo · 16/05/2026 → 17/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">16/05–17/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:87.98283261802575%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#80DEEA33;border:1px solid #00838F;" title="Serialización del pipeline con cloudpickle · 18/05/2026 → 19/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#00838F;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">18/05–19/05</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:88.8412017167382%;width:3.0042918454935688%;height:22px;top:calc(50% - 11px);background:#EF6C00;border:1px solid #FFCC8033;" title="B14 · Código de reentrenamiento · 20/05/2026 → 26/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#EF6C00;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/05–26/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:88.8412017167382%;width:0.8583690987124442%;height:16px;top:calc(50% - 8px);background:#FFCC8033;border:1px solid #EF6C00;" title="Definición de la estrategia de reentrenamiento · 20/05/2026 → 21/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#EF6C00;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">20/05–21/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:89.69957081545064%;width:1.2875536480686662%;height:16px;top:calc(50% - 8px);background:#FFCC8033;border:1px solid #EF6C00;" title="Código modular para reentrenar ante nuevos datos · 22/05/2026 → 24/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#EF6C00;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">22/05–24/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:90.98712446351931%;width:0.8583690987124584%;height:16px;top:calc(50% - 8px);background:#FFCC8033;border:1px solid #EF6C00;" title="Validación de que el reentrenamiento reproduce result. · 25/05/2026 → 26/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#EF6C00;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">25/05–26/05</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px;background:#0F0F1A;"></div>
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:91.84549356223177%;width:2.1459227467811104%;height:22px;top:calc(50% - 11px);background:#C2185B;border:1px solid #F8BBD033;" title="B15 · Aplicación en producción y validación temporal · 27/05/2026 → 31/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/05–31/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:91.84549356223177%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#F8BBD033;border:1px solid #C2185B;" title="Carga de datos de nuevo periodo temporal · 27/05/2026 → 27/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">27/05–27/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:92.27467811158799%;width:0.42918454935620787%;height:16px;top:calc(50% - 8px);background:#F8BBD033;border:1px solid #C2185B;" title="Aplicación de pipelines serializados sobre nuevos datos · 28/05/2026 → 28/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">28/05–28/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:92.7038626609442%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#F8BBD033;border:1px solid #C2185B;" title="Obtención del scoring mediante predicción del modelo · 29/05/2026 → 29/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">29/05–29/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:93.13304721030042%;width:0.4291845493562363%;height:16px;top:calc(50% - 8px);background:#F8BBD033;border:1px solid #C2185B;" title="Cálculo de métricas de negocio sobre las predicciones · 30/05/2026 → 30/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">30/05–30/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#1A1A2E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:93.13304721030042%;width:0.4291845493562363%;height:16px;top:calc(50% - 8px);background:#F8BBD033;border:1px solid #C2185B;" title="Análisis comparativo de resultados entre periodos · 30/05/2026 → 30/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">30/05–30/05</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gantt-row" style="background:#16213E;">      <div class="bar-cell">
+        <div class="bar-track" style="left:93.56223175965665%;width:0.4291845493562221%;height:16px;top:calc(50% - 8px);background:#F8BBD033;border:1px solid #C2185B;" title="Identificación de los casos más rentables por scoring · 31/05/2026 → 31/05/2026 · 0%">
+          <div class="bar-progress" style="width:0%;background:#C2185B;opacity:0.75;height:100%;"></div>
+          <span class="bar-label">31/05–31/05</span>
+        </div>
+      </div>
+    </div>
+        
+        <div class="gantt-row" style="background:#1A1A2E;">          <div class="bar-cell">
+            <div class="milestone-diamond" style="left:calc(93.99141630901288% - 8px);" title="Hito: Entrega final del proyecto · 01/06/2026 · Pendiente"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1565C0;"></div> Completado (100%)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#00695C;"></div> En curso / Futuro</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FF6F00;border:1.5px solid #FF6F00;"></div> Bloqueante</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#B71C1C;border:2px solid #FFD700;rotate:45deg;border-radius:0;"></div> Hito</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FF1744;"></div> Hoy · 16/03/2026</div>
+</div>
+
+<script>
+  let zoomLevel = 100;
+  const chartCol = document.getElementById('chart-col');
+
+  function zoom(dir) {
+    zoomLevel = Math.max(50, Math.min(400, zoomLevel + dir * 25));
+    chartCol.style.minWidth = zoomLevel + 'vw';
+    document.getElementById('zoom-label').textContent = zoomLevel + '%';
+  }
+
+  function scrollToToday() {
+    const todayLine = document.getElementById('today-line');
+    const container = document.getElementById('gantt-container');
+    const labelWidth = 300;
+    const chartWidth = chartCol.offsetWidth;
+    const todayPct = 60.94420600858369;
+    const todayPx = (todayPct / 100) * chartWidth;
+    container.scrollLeft = todayPx - (window.innerWidth - labelWidth) / 2;
+  }
+
+  window.addEventListener('load', () => {
+    setTimeout(scrollToToday, 100);
+  });
+</script>
+</body>
+</html>
